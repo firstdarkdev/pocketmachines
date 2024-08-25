@@ -12,7 +12,7 @@
     "sources": "https://github.com/firstdarkdev/pocketmachines"
   },
   "license": "MIT",
-  "icon": "assets/examplemod/icon.png",
+  "icon": "assets/pocketmachines/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
