@@ -1,0 +1,96 @@
+plugins {
+    id 'java'
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.8"
+    id "xyz.wagyourtail.unimined" version "1.2.9" apply false
+    id "com.hypherionmc.modutils.orion" version "1.0.22"
+    id 'com.matyrobbrt.mc.registrationutils' version "1.21.0-0.2.1"
+}
+
+orion.setup {
+    multiProject = true
+    enableMirrorMaven = true
+    enableReleasesMaven = true
+
+    dopplerToken = System.getenv("DOPPLER_KEY")
+
+    versioning {
+        var relType = project.properties["releaseType"] ?: "${release_type}"
+        identifier("${relType}")
+    }
+
+    tools {
+        lombok()
+        autoService()
+    }
+}
+
+registrationUtils {
+    group 'com.hypherionmc.pocketmachines.reg'
+    projects {
+        Fabric { type 'Fabric' } // The fabric project
+        NeoForge { type 'NeoForge' } // The neoforge project
+        Common { type 'Common' } // The common project
+    }
+}
+
+group = project_group
+
+subprojects {
+    apply plugin: "xyz.wagyourtail.unimined"
+    apply plugin: "java"
+    apply plugin: 'maven-publish'
+
+    group = rootProject.group
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+
+    // Add your maven repositories here
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+
+    }
+
+    jar {
+        manifest {
+            attributes([
+                    'Specification-Title'     : project.archivesBaseName,
+                    'Specification-Vendor'    : mod_author,
+                    'Specification-Version'   : project.version,
+                    'Implementation-Title'    : project.name,
+                    'Implementation-Version'  : project.version,
+                    'Implementation-Vendor'   : mod_author,
+                    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                    'Timestamp'               : System.currentTimeMillis(),
+                    'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                    'Built-On-Minecraft'      : minecraft_version
+            ])
+        }
+    }
+
+    /**
+     * ===============================================================================
+     * =       DO NOT EDIT BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING        =
+     * ===============================================================================
+     */
+
+    unimined.minecraft(sourceSets.main, true) {
+        version minecraft_version
+
+        mappings {
+            mojmap()
+            devNamespace "mojmap"
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = 'UTF-8'
+        it.options.release = 21
+    }
+
+    tasks.withType(GenerateModuleMetadata).configureEach {
+        enabled = false
+    }
+}

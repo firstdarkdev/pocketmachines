@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "Simple, portable vanilla machines",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "homepage": "https://pocketmachines.fdd-docs.com",
+    "sources": "https://github.com/firstdarkdev/pocketmachines"
+  },
+  "license": "MIT",
+  "icon": "assets/examplemod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.hypherionmc.pocketmachines.PocketMachinesFabric"
+    ],
+    "client": [
+      "com.hypherionmc.pocketmachines.client.PocketMachinesFabricClient"
+    ]
+  },
+  "mixins": [
+    "pocketmachines.mixins.json",
+    "pocketmachines-fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16",
+    "fabric": "*",
+    "minecraft": ">=1.21.1",
+    "java": ">=21"
+  },
+  "accessWidener": "pocketmachines.accesswidener"
+}
