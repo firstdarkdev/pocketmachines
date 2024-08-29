@@ -41,7 +41,7 @@ public abstract class BasePocketItem<T extends ISaveableContainer> extends Item 
             openScreen(saveHolder.getInstance(compoundTag.getString(NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
         }
 
-        return super.use(levelIn, playerIn, handIn);
+        return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
     }
 
     public abstract void openScreen(T container, Level level, @NotNull Player player, @NotNull InteractionHand hand);

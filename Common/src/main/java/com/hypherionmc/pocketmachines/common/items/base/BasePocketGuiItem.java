@@ -20,7 +20,7 @@ public abstract class BasePocketGuiItem extends Item {
             this.openMenu(level, player, hand);
         }
 
-        return super.use(level, player, hand);
+        return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 
     public abstract void openMenu(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand);
