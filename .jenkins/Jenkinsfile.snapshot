@@ -1,5 +1,5 @@
 def projectName = "Simple Pocket Machines";
-def projectIcon = "https://cdn.modrinth.com/data/Sh0YauEf/icon.png";
+def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
 def mcVer = "1.21.1";
 
 pipeline {
