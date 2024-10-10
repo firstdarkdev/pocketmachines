@@ -4,6 +4,7 @@ plugins {
     id "xyz.wagyourtail.unimined" version "1.2.9" apply false
     id "com.hypherionmc.modutils.orion" version "1.0.22"
     id 'com.matyrobbrt.mc.registrationutils' version "1.21.0-0.2.1"
+    id "com.hypherionmc.modutils.modpublisher" version "2.1.6"
 }
 
 orion.setup {
@@ -39,6 +40,7 @@ subprojects {
     apply plugin: "xyz.wagyourtail.unimined"
     apply plugin: "java"
     apply plugin: 'maven-publish'
+    apply plugin: 'com.hypherionmc.modutils.modpublisher'
 
     group = rootProject.group
     sourceCompatibility = JavaVersion.VERSION_21

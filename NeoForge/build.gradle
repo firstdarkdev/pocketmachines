@@ -1,5 +1,5 @@
 // Adjust the output jar name here
-archivesBaseName = "${mod_name}-NeoForge-${minecraft_version}"
+archivesBaseName = "${mod_name.replace(" ", "")}-NeoForge-${minecraft_version}"
 
 dependencies {
     // Add your dependencies here
@@ -34,4 +34,25 @@ compileTestJava.enabled = false
 
 tasks.withType(JavaCompile).configureEach {
     source(project(":Common").sourceSets.main.allSource)
+}
+
+publisher {
+    apiKeys {
+        modrinth(System.getenv("MODRINTH_TOKEN"))
+        curseforge(System.getenv("CURSE_TOKEN"))
+        nightbloom(System.getenv("PLATFORM_KEY"))
+    }
+
+    setCurseID('1090864')
+    setModrinthID('pocketmachines')
+    setNightbloomID("pocketmachines")
+    setVersionType("release")
+    setChangelog("https://raw.githubusercontent.com/hypherionmc/changelogs/refs/heads/main/pocketmachines.md")
+    setProjectVersion("${minecraft_version}-${project.version}")
+    setDisplayName("[NeoForge 1.21.1] Simple Pocket Machines - ${project.version}")
+    setGameVersions("1.21.1")
+    setLoaders("neoforge")
+    setArtifact(remapJar)
+    setCurseEnvironment("both")
+    setIsManualRelease(true)
 }
