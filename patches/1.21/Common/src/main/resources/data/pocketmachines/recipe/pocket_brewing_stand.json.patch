@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_brewing_stand.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_brewing_stand.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:brewing_stand"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:brewing_stand"
++    }
+   ],
+   "result": {
+     "count": 1,

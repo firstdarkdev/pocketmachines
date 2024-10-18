@@ -1,0 +1,8 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/setup/ModItems.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/setup/ModItems.java
+@@ -40,5 +40,4 @@
+     public static List<ItemStack> getTabStacks() {
+         return ITEMS.getEntries().stream().map(r -> r.get().getDefaultInstance()).toList();
+     }
+-
+ }

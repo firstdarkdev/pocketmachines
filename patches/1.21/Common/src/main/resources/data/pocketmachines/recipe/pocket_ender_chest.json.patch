@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_ender_chest.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_ender_chest.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:ender_chest"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:ender_chest"
++    }
+   ],
+   "result": {
+     "count": 1,

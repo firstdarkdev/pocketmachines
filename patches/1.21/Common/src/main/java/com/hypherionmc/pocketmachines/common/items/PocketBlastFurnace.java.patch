@@ -1,0 +1,33 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/PocketBlastFurnace.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/PocketBlastFurnace.java
+@@ -3,7 +3,6 @@
+ import com.hypherionmc.pocketmachines.common.inventory.PocketBlastFurnaceInventory;
+ import com.hypherionmc.pocketmachines.common.items.base.BaseTickablePocketItem;
+ import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
+-import net.minecraft.server.level.ServerLevel;
+ import net.minecraft.world.InteractionHand;
+ import net.minecraft.world.entity.Entity;
+ import net.minecraft.world.entity.player.Player;
+@@ -11,12 +10,10 @@
+ import net.minecraft.world.level.Level;
+ import org.jetbrains.annotations.NotNull;
+ 
+-import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
+-
+ public class PocketBlastFurnace extends BaseTickablePocketItem<PocketBlastFurnaceInventory> {
+ 
+     public PocketBlastFurnace() {
+-        super(PersistedMachines.POCKET_BLAST_FURNACE, "TG_BLAST_FURNACE_INDEX", makeResourceKey("pocket_blast_furnace"));
++        super(PersistedMachines.POCKET_BLAST_FURNACE, "TG_BLAST_FURNACE_INDEX");
+     }
+ 
+     @Override
+@@ -26,7 +23,7 @@
+ 
+     @Override
+     public void tickItem(PocketBlastFurnaceInventory container, @NotNull ItemStack stack, Level level, @NotNull Entity entity, int itemSlow, boolean isSelected) {
+-        container.tick((ServerLevel) level);
++        container.tick(level);
+     }
+ 
+ }

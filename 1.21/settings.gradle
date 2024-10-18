@@ -13,4 +13,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'pocketmachines-lts'
+rootProject.name = 'pocketmachines'
+include('Common', 'Fabric', 'NeoForge')

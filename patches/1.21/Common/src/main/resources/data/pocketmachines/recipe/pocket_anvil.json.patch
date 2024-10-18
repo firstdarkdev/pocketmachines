@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_anvil.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_anvil.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:anvil"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:anvil"
++    }
+   ],
+   "result": {
+     "count": 1,

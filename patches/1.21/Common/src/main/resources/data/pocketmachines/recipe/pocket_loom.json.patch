@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_loom.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_loom.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:loom"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:loom"
++    }
+   ],
+   "result": {
+     "count": 1,

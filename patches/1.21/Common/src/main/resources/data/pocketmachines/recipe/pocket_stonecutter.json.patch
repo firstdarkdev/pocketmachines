@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_stonecutter.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_stonecutter.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:stonecutter"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:stonecutter"
++    }
+   ],
+   "result": {
+     "count": 1,

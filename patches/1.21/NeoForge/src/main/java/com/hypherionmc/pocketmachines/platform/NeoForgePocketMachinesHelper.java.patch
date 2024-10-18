@@ -1,0 +1,21 @@
+--- a/NeoForge/src/main/java/com/hypherionmc/pocketmachines/platform/NeoForgePocketMachinesHelper.java
++++ b/NeoForge/src/main/java/com/hypherionmc/pocketmachines/platform/NeoForgePocketMachinesHelper.java
+@@ -5,11 +5,18 @@
+ import net.minecraft.world.flag.FeatureFlagSet;
+ import net.minecraft.world.inventory.AbstractContainerMenu;
+ import net.minecraft.world.inventory.MenuType;
++import net.minecraft.world.item.ItemStack;
++import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+ 
+ import java.util.function.BiFunction;
+ 
+ @AutoService(PocketMachinesHelper.class)
+ public class NeoForgePocketMachinesHelper implements PocketMachinesHelper {
++
++    @Override
++    public int getBurnTime(ItemStack stack) {
++        return AbstractFurnaceBlockEntity.getFuel().getOrDefault(stack.getItem(), 0);
++    }
+ 
+     @Override
+     public <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> creator, FeatureFlagSet flags) {

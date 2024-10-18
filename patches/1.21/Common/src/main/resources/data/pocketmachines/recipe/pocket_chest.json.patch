@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_chest.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_chest.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:chest"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:chest"
++    }
+   ],
+   "result": {
+     "count": 1,

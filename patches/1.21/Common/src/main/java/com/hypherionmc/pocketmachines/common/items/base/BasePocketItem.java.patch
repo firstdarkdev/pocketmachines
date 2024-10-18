@@ -1,0 +1,40 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BasePocketItem.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BasePocketItem.java
+@@ -5,9 +5,8 @@
+ import lombok.Getter;
+ import net.minecraft.core.component.DataComponents;
+ import net.minecraft.nbt.CompoundTag;
+-import net.minecraft.resources.ResourceKey;
+ import net.minecraft.world.InteractionHand;
+-import net.minecraft.world.InteractionResult;
++import net.minecraft.world.InteractionResultHolder;
+ import net.minecraft.world.entity.player.Player;
+ import net.minecraft.world.item.Item;
+ import net.minecraft.world.item.ItemStack;
+@@ -21,14 +20,14 @@
+     private final SaveHolder<T> saveHolder;
+     final String NBT_KEY;
+ 
+-    public BasePocketItem(SaveHolder<T> saveHolder, String nbtKey, ResourceKey<Item> key) {
+-        super(new Properties().stacksTo(1).fireResistant().setId(key));
++    public BasePocketItem(SaveHolder<T> saveHolder, String nbtKey) {
++        super(new Properties().stacksTo(1).fireResistant());
+         this.saveHolder = saveHolder;
+         this.NBT_KEY = nbtKey;
+     }
+ 
+     @Override
+-    public @NotNull InteractionResult use(Level levelIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
++    public @NotNull InteractionResultHolder<ItemStack> use(Level levelIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+         if (!levelIn.isClientSide() && !playerIn.isCrouching()) {
+             ItemStack stack = playerIn.getItemInHand(handIn);
+             CustomData tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+@@ -42,7 +41,7 @@
+             openScreen(saveHolder.getInstance(compoundTag.getString(NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
+         }
+ 
+-        return InteractionResult.SUCCESS;
++        return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
+     }
+ 
+     public abstract void openScreen(T container, Level level, @NotNull Player player, @NotNull InteractionHand hand);

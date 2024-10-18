@@ -1,0 +1,16 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/PocketChest.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/PocketChest.java
+@@ -8,12 +8,10 @@
+ import net.minecraft.world.level.Level;
+ import org.jetbrains.annotations.NotNull;
+ 
+-import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
+-
+ public class PocketChest extends BasePocketItem<PocketChestInventory> {
+ 
+     public PocketChest() {
+-        super(PersistedMachines.POCKET_CHEST, "TG_CHEST", makeResourceKey("pocket_chest"));
++        super(PersistedMachines.POCKET_CHEST, "TG_CHEST");
+     }
+ 
+     @Override

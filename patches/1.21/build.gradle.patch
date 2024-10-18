@@ -1,0 +1,25 @@
+--- a/build.gradle
++++ b/build.gradle
+@@ -7,21 +7,15 @@
+     id "com.hypherionmc.modutils.modpublisher" version "2.1.6"
+ }
+ 
+-var relType = project.properties["releaseType"] ?: "${release_type}"
+-
+-ext {
+-    isPort = (relType == 'port')
+-}
+-
+ orion.setup {
+     multiProject = true
+     enableMirrorMaven = true
+     enableReleasesMaven = true
+-    enableSnapshotsMaven = isPort
+ 
+     dopplerToken = System.getenv("DOPPLER_KEY")
+ 
+     versioning {
++        var relType = project.properties["releaseType"] ?: "${release_type}"
+         identifier("${relType}")
+     }
+ 

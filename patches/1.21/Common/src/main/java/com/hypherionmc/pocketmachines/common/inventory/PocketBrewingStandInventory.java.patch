@@ -1,0 +1,16 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketBrewingStandInventory.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketBrewingStandInventory.java
+@@ -159,10 +159,10 @@
+         }
+ 
+         itemStack.shrink(1);
+-        ItemStack lv3 = itemStack.getItem().getCraftingRemainder();
+-        if (!lv3.isEmpty()) {
++        if (itemStack.getItem().hasCraftingRemainingItem()) {
++            ItemStack itemStack2 = new ItemStack(itemStack.getItem().getCraftingRemainingItem());
+             if (itemStack.isEmpty()) {
+-                itemStack = lv3;
++                itemStack = itemStack2;
+             }
+         }
+ 

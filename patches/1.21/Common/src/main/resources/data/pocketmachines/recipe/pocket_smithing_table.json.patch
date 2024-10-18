@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_smithing_table.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_smithing_table.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:smithing_table"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:smithing_table"
++    }
+   ],
+   "result": {
+     "count": 1,

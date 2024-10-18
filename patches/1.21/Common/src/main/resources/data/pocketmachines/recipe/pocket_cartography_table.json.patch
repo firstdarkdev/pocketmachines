@@ -1,0 +1,17 @@
+--- a/Common/src/main/resources/data/pocketmachines/recipe/pocket_cartography_table.json
++++ b/Common/src/main/resources/data/pocketmachines/recipe/pocket_cartography_table.json
+@@ -2,8 +2,12 @@
+   "type": "minecraft:crafting_shapeless",
+   "category": "misc",
+   "ingredients": [
+-    "minecraft:item_frame",
+-    "minecraft:cartography_table"
++    {
++      "item": "minecraft:item_frame"
++    },
++    {
++      "item": "minecraft:cartography_table"
++    }
+   ],
+   "result": {
+     "count": 1,
