@@ -29,7 +29,7 @@ pipeline {
         stage("Build") {
             steps {
                 sh "chmod +x ./gradlew"
-                sh "./gradlew clean build -PreleaseType=snapshot"
+                sh "./gradlew clean build -PreleaseType=port"
             }
         }
     }
