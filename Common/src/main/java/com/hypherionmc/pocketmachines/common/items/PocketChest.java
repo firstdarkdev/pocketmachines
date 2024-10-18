@@ -8,10 +8,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
+
 public class PocketChest extends BasePocketItem<PocketChestInventory> {
 
     public PocketChest() {
-        super(PersistedMachines.POCKET_CHEST, "TG_CHEST");
+        super(PersistedMachines.POCKET_CHEST, "TG_CHEST", makeResourceKey("pocket_chest"));
     }
 
     @Override

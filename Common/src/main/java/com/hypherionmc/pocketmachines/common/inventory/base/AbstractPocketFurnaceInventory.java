@@ -3,16 +3,14 @@ package com.hypherionmc.pocketmachines.common.inventory.base;
 import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
 import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
-import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.ContainerListener;
@@ -26,8 +24,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.FuelValues;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -135,76 +133,78 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         return this.litTime > 0;
     }
 
-    public void tick(Level level) {
+    public void tick(ServerLevel level) {
         boolean isLit = this.isLit();
-        boolean bl2 = false;
+        boolean isDirty = false;
         if (this.isLit()) {
-            this.litTime--;
+            --this.litTime;
         }
 
         ItemStack itemStack = this.items.get(1);
         ItemStack itemStack2 = this.items.get(0);
-        boolean bl3 = !itemStack2.isEmpty();
-        boolean bl4 = !itemStack.isEmpty();
+        boolean hasInput = !itemStack2.isEmpty();
+        boolean hasFuel = !itemStack.isEmpty();
         if (this.litDuration == 0) {
-            this.litDuration = this.getBurnDuration(itemStack);
+            this.litDuration = this.getBurnDuration(level.fuelValues(), itemStack);
         }
 
-        if (this.isLit() || bl4 && bl3) {
-            RecipeHolder<?> recipeHolder;
-            if (bl3) {
-                recipeHolder = this.quickCheck.getRecipeFor(new SingleRecipeInput(itemStack2), level).orElse(null);
+        if (!this.isLit() && (!hasFuel || !hasInput)) {
+            if (!this.isLit() && this.cookingProgress > 0) {
+                this.cookingProgress = Mth.clamp(this.cookingProgress - 2, 0, this.cookingTotalTime);
+            }
+        } else {
+            SingleRecipeInput lv3 = new SingleRecipeInput(itemStack2);
+            RecipeHolder lv4;
+            if (hasInput) {
+                lv4 = this.quickCheck.getRecipeFor(lv3, level).orElse(null);
             } else {
-                recipeHolder = null;
+                lv4 = null;
             }
 
             int i = this.getMaxStackSize();
-            if (!this.isLit() && canBurn(level.registryAccess(), recipeHolder, this.items, i)) {
-                this.litTime = this.getBurnDuration(itemStack);
+            if (!this.isLit() && canBurn(level.registryAccess(), lv4, lv3, this.items, i)) {
+                this.litTime = this.getBurnDuration(level.fuelValues(), itemStack);
                 this.litDuration = this.litTime;
                 if (this.isLit()) {
-                    bl2 = true;
-                    if (bl4) {
-                        Item item = itemStack.getItem();
+                    isDirty = true;
+                    if (hasFuel) {
+                        Item lv5 = itemStack.getItem();
                         itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
-                            Item item2 = item.getCraftingRemainingItem();
-                            this.items.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
+                            this.items.set(1, lv5.getCraftingRemainder());
                         }
                     }
                 }
             }
 
-            if (this.isLit() && canBurn(level.registryAccess(), recipeHolder, this.items, i)) {
-                this.cookingProgress++;
+            if (this.isLit() && canBurn(level.registryAccess(), lv4, lv3, this.items, i)) {
+                ++this.cookingProgress;
                 if (this.cookingProgress == this.cookingTotalTime) {
                     this.cookingProgress = 0;
                     this.cookingTotalTime = getTotalCookTime(level);
-                    if (burn(level.registryAccess(), recipeHolder, this.items, i)) {
-                        this.setRecipeUsed(recipeHolder);
+                    if (burn(level.registryAccess(), lv4, lv3, this.items, i)) {
+                        this.setRecipeUsed(lv4);
                     }
 
-                    bl2 = true;
+                    isDirty = true;
                 }
             } else {
                 this.cookingProgress = 0;
             }
-        } else if (!this.isLit() && this.cookingProgress > 0) {
-            this.cookingProgress = Mth.clamp(this.cookingProgress - 2, 0, this.cookingTotalTime);
         }
 
         if (isLit != this.isLit()) {
-            bl2 = true;
+            isDirty = true;
         }
 
-        if (bl2) {
+        if (isDirty) {
             setChanged();
         }
     }
 
-    private static boolean canBurn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipeHolder, NonNullList<ItemStack> nonNullList, int i) {
+    private static boolean canBurn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipeHolder, SingleRecipeInput input, NonNullList<ItemStack> nonNullList, int i) {
         if (!nonNullList.get(0).isEmpty() && recipeHolder != null) {
-            ItemStack itemStack = recipeHolder.value().getResultItem(registryAccess);
+            ItemStack itemStack = ((AbstractCookingRecipe) recipeHolder.value()).assemble(input, registryAccess);
             if (itemStack.isEmpty()) {
                 return false;
             } else {
@@ -222,10 +222,10 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         }
     }
 
-    private static boolean burn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipeHolder, NonNullList<ItemStack> nonNullList, int i) {
-        if (recipeHolder != null && canBurn(registryAccess, recipeHolder, nonNullList, i)) {
+    private static boolean burn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipeHolder, SingleRecipeInput input, NonNullList<ItemStack> nonNullList, int i) {
+        if (recipeHolder != null && canBurn(registryAccess, recipeHolder, input, nonNullList, i)) {
             ItemStack itemStack = nonNullList.get(0);
-            ItemStack itemStack2 = recipeHolder.value().getResultItem(registryAccess);
+            ItemStack itemStack2 = ((AbstractCookingRecipe) recipeHolder.value()).assemble(input, registryAccess);
             ItemStack itemStack3 = nonNullList.get(2);
             if (itemStack3.isEmpty()) {
                 nonNullList.set(2, itemStack2.copy());
@@ -246,20 +246,20 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
 
     public void setRecipeUsed(@Nullable RecipeHolder<?> recipeHolder) {
         if (recipeHolder != null) {
-            ResourceLocation resourceLocation = recipeHolder.id();
+            ResourceLocation resourceLocation = recipeHolder.id().location();
             this.recipesUsed.addTo(resourceLocation, 1);
         }
     }
 
-    protected int getBurnDuration(ItemStack itemStack) {
-        return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack);
+    protected int getBurnDuration(FuelValues fuelValues, ItemStack itemStack) {
+        return fuelValues.burnDuration(itemStack);
     }
 
-    private int getTotalCookTime(Level level) {
+    private int getTotalCookTime(ServerLevel level) {
         SingleRecipeInput singleRecipeInput = new SingleRecipeInput(this.getItem(0));
         return this.quickCheck
                 .getRecipeFor(singleRecipeInput, level)
-                .map(recipeHolder -> recipeHolder.value().getCookingTime())
+                .map(recipeHolder -> recipeHolder.value().cookingTime())
                 .orElse(200);
     }
 
@@ -326,7 +326,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
             return true;
         } else {
             ItemStack itemStack2 = this.items.get(1);
-            return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack) > 0 || itemStack.is(Items.BUCKET) && !itemStack2.is(Items.BUCKET);
+            return PersistedMachines.getLevel() != null && PersistedMachines.getLevel().fuelValues().isFuel(itemStack) || itemStack.is(Items.BUCKET) && !itemStack2.is(Items.BUCKET);
         }
     }
 

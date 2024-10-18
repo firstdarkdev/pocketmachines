@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:item_frame"
-    },
-    {
-      "item": "minecraft:grindstone"
-    }
+    "minecraft:item_frame",
+    "minecraft:grindstone"
   ],
   "result": {
     "count": 1,

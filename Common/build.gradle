@@ -1,5 +1,5 @@
 // Adjust the output jar name here
-archivesBaseName = "${mod_name}-Common-${minecraft_version}"
+archivesBaseName = "${mod_name.replace(" ", "")}-Common-${minecraft_version}"
 
 dependencies {
     // Add your dependencies here

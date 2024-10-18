@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:item_frame"
-    },
-    {
-      "item": "minecraft:cartography_table"
-    }
+    "minecraft:item_frame",
+    "minecraft:cartography_table"
   ],
   "result": {
     "count": 1,

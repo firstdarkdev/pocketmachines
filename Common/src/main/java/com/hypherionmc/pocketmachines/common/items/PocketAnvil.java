@@ -1,7 +1,6 @@
 package com.hypherionmc.pocketmachines.common.items;
 
 import com.hypherionmc.pocketmachines.common.items.base.BasePocketGuiItem;
-import lombok.NoArgsConstructor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -13,10 +12,15 @@ import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-@NoArgsConstructor
+import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
+
 public class PocketAnvil extends BasePocketGuiItem {
 
     private static final Component TITLE = Component.translatable("item.pocketmachines.pocket_anvil");
+
+    public PocketAnvil() {
+        super(makeResourceKey("pocket_anvil"));
+    }
 
     @Override
     public void openMenu(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {

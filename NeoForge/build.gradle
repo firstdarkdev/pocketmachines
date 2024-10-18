@@ -15,8 +15,12 @@ dependencies {
  */
 
 unimined.minecraft {
-    neoForged {
-        loader neoforge_version
+    neoForge {
+        if (isPort) {
+            loader "net.neoforged:neoforge:${neoforge_version}:universal"
+        } else {
+            loader neoforge_version
+        }
         mixinConfig("${mod_id}.mixins.json")
     }
 }
@@ -49,8 +53,8 @@ publisher {
     setVersionType("release")
     setChangelog("https://raw.githubusercontent.com/hypherionmc/changelogs/refs/heads/main/pocketmachines.md")
     setProjectVersion("${minecraft_version}-${project.version}")
-    setDisplayName("[NeoForge 1.21.1] Simple Pocket Machines - ${project.version}")
-    setGameVersions("1.21.1")
+    setDisplayName("[NeoForge 1.21.2] Simple Pocket Machines - ${project.version}")
+    setGameVersions("1.21.2")
     setLoaders("neoforge")
     setArtifact(remapJar)
     setCurseEnvironment("both")

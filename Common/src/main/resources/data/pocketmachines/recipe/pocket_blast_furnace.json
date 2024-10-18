@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:item_frame"
-    },
-    {
-      "item": "minecraft:blast_furnace"
-    }
+    "minecraft:item_frame",
+    "minecraft:blast_furnace"
   ],
   "result": {
     "count": 1,

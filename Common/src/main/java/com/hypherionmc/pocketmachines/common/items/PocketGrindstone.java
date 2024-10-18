@@ -1,7 +1,6 @@
 package com.hypherionmc.pocketmachines.common.items;
 
 import com.hypherionmc.pocketmachines.common.items.base.BasePocketGuiItem;
-import lombok.NoArgsConstructor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -13,8 +12,13 @@ import net.minecraft.world.inventory.GrindstoneMenu;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-@NoArgsConstructor
+import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
+
 public class PocketGrindstone extends BasePocketGuiItem {
+
+    public PocketGrindstone() {
+        super(makeResourceKey("pocket_grindstone"));
+    }
 
     @Override
     public void openMenu(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {

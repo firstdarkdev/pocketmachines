@@ -40,4 +40,5 @@ public class ModItems {
     public static List<ItemStack> getTabStacks() {
         return ITEMS.getEntries().stream().map(r -> r.get().getDefaultInstance()).toList();
     }
+
 }

@@ -1,7 +1,6 @@
 package com.hypherionmc.pocketmachines.common.items;
 
 import com.hypherionmc.pocketmachines.common.items.base.BasePocketGuiItem;
-import lombok.NoArgsConstructor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -13,10 +12,15 @@ import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-@NoArgsConstructor
+import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
+
 public class PocketEnderChest extends BasePocketGuiItem {
 
     private final Component TITLE = Component.translatable("item.pocketmachines.pocket_ender_chest");
+
+    public PocketEnderChest() {
+        super(makeResourceKey("pocket_ender_chest"));
+    }
 
     @Override
     public void openMenu(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {

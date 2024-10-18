@@ -159,10 +159,10 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
         }
 
         itemStack.shrink(1);
-        if (itemStack.getItem().hasCraftingRemainingItem()) {
-            ItemStack itemStack2 = new ItemStack(itemStack.getItem().getCraftingRemainingItem());
+        ItemStack lv3 = itemStack.getItem().getCraftingRemainder();
+        if (!lv3.isEmpty()) {
             if (itemStack.isEmpty()) {
-                itemStack = itemStack2;
+                itemStack = lv3;
             }
         }
 

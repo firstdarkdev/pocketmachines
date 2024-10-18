@@ -4,8 +4,10 @@ import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
 import com.hypherionmc.pocketmachines.common.world.SaveHolder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
@@ -13,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseTickablePocketItem<T extends ISaveableContainer> extends BasePocketItem<T> {
 
-    public BaseTickablePocketItem(SaveHolder<T> saveHolder, String nbtKey) {
-        super(saveHolder, nbtKey);
+    public BaseTickablePocketItem(SaveHolder<T> saveHolder, String nbtKey, ResourceKey<Item> key) {
+        super(saveHolder, nbtKey, key);
     }
 
     @Override

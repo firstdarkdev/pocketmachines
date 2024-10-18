@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.SmokerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.FuelValues;
 import org.jetbrains.annotations.NotNull;
 
 public class PocketSmokerInventory extends AbstractPocketFurnaceInventory {
@@ -22,8 +23,8 @@ public class PocketSmokerInventory extends AbstractPocketFurnaceInventory {
     }
 
     @Override
-    protected int getBurnDuration(ItemStack itemStack) {
-        return super.getBurnDuration(itemStack) / 2;
+    protected int getBurnDuration(FuelValues fuelValues, ItemStack itemStack) {
+        return super.getBurnDuration(fuelValues, itemStack) / 2;
     }
 
     @Override

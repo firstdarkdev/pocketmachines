@@ -10,10 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
+
 public class PocketBrewingStand extends BaseTickablePocketItem<PocketBrewingStandInventory> {
 
     public PocketBrewingStand() {
-        super(PersistedMachines.POCKET_BREWING_STAND, "TG_POCKET_BREWING_STAND_INDEX");
+        super(PersistedMachines.POCKET_BREWING_STAND, "TG_POCKET_BREWING_STAND_INDEX", makeResourceKey("pocket_brewing_stand"));
     }
 
     @Override
