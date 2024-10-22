@@ -1,0 +1,34 @@
+--- a/.jenkins/Jenkinsfile.deploy
++++ b/.jenkins/Jenkinsfile.deploy
+@@ -26,20 +26,26 @@
+         }
+         stage("Prepare") {
+             steps {
+-                sh "chmod +x ./gradlew"
+-                sh "./gradlew clean"
++                dir("${WORKSPACE}/${majorMc}") {
++                    sh "chmod +x ./gradlew"
++                    sh "./gradlew clean"
++                }
+             }
+         }
+         stage("Publish to Modrinth/Curseforge") {
+             steps {
+-                sh "./gradlew publishMod -Prelease=true"
++                dir("${WORKSPACE}/${majorMc}") {
++                    sh "./gradlew publishMod -Prelease=true"
++                }
+             }
+         }
+     }
+     post {
+         always {
+-            sh "./gradlew --stop"
+-            deleteDir()
++            dir("${WORKSPACE}/${majorMc}") {
++                sh "./gradlew --stop"
++                deleteDir()
++            }
+ 
+             discordSend webhookURL: env.FDD_WH_ADMIN,
+                     title: "Simple Pocket Machines Deploy #${BUILD_NUMBER}",

@@ -1,0 +1,81 @@
+--- a/.jenkins/Jenkinsfile.snapshot
++++ b/.jenkins/Jenkinsfile.snapshot
+@@ -1,25 +1,29 @@
+ def projectName = "Simple Pocket Machines";
+ def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
+-def mcVer = "1.21.2";
++def JDK = "21";
++def majorMc = "1.21.2";
++def modLoaders = "neoforge|fabric|quilt";
++def supportedMc = "1.21.2";
++def reltype = "snapshot";
+ 
+ pipeline {
+     agent {
+         docker {
+-            image "registry.firstdark.dev/java21:latest"
++            image "registry.firstdark.dev/java${JDK}:latest"
+             alwaysPull true
+             args '-v gradle-cache:/home/gradle/.gradle'
+-       }
+-   }
++        }
++    }
+ 
+-   environment {
+-       GRADLE_USER_HOME = '/home/gradle/.gradle'
+-   }
++    environment {
++        GRADLE_USER_HOME = '/home/gradle/.gradle'
++    }
+ 
+     stages {
+         stage("Notify Discord") {
+             steps {
+                 discordSend webhookURL: env.SSS_WEBHOOK,
+-                        title: "Deploy Started: ${projectName} ${mcVer} Deploy #${BUILD_NUMBER}",
++                        title: "Deploy Started: ${projectName} ${majorMc} Deploy #${BUILD_NUMBER}",
+                         link: env.BUILD_URL,
+                         result: 'SUCCESS',
+                         description: "Build: [${BUILD_NUMBER}](${env.BUILD_URL})"
+@@ -28,29 +32,33 @@
+ 
+         stage("Build") {
+             steps {
+-                sh "chmod +x ./gradlew"
+-                sh "./gradlew clean build -PreleaseType=port"
++                dir("${WORKSPACE}/${majorMc}") {
++                    sh "chmod +x ./gradlew"
++                    sh "./gradlew build -PreleaseType=${reltype}"
++                }
+             }
+         }
+     }
+ 
+     post {
+         always {
+-            sh "./gradlew --stop"
+-            archiveArtifacts artifacts: 'artifacts/*.jar'
++            dir("${WORKSPACE}/${majorMc}") {
++                sh "./gradlew --stop"
++                archiveArtifacts artifacts: 'artifacts/*.jar'
+ 
+             fddsnapshotter apiKey: env.PLATFORM_KEY,
+                 projectSlug: "pocketmachines",
+                 projectName: "${projectName}",
+                 projectIcon: "${projectIcon}",
+-                modLoaders: "neoforge|fabric|quilt",
+-                minecraftVersions: "1.21.2-rc1",
++                modLoaders: "${modLoaders}",
++                minecraftVersions: "${supportedMc}",
+                 type: "snapshot",
+                 dependsOn: "",
+                 failWebhook: env.SSS_WEBHOOK,
+                 publishWebhooks: "${env.SSS_WEBHOOK}|${env.FDD_WH}"
+ 
+-            deleteDir()
++                deleteDir()
++            }
+         }
+     }
+ }

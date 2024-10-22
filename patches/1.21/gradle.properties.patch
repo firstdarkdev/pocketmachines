@@ -13,17 +13,17 @@
  mod_name=Simple Pocket Machines
  
  # Shared
--minecraft_version=1.21.2-rc1
+-minecraft_version=1.21.2
 +minecraft_version=1.21.1
  
  # Fabric
 -fabric_loader=0.16.7
--fabric_api=0.106.0+1.21.2
+-fabric_api=0.106.1+1.21.2
 +fabric_loader=0.16.2
 +fabric_api=0.102.1+1.21.1
  
  # NeoForge
--neoforge_version=21.2.0-alpha.1.21.2-rc1.20241017.224038
+-neoforge_version=0-beta
 +neoforge_version=23
  
  # Gradle Options

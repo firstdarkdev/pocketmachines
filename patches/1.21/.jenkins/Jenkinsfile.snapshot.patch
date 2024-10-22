@@ -38,25 +38,15 @@
                          link: env.BUILD_URL,
                          result: 'SUCCESS',
                          description: "Build: [${BUILD_NUMBER}](${env.BUILD_URL})"
-@@ -28,29 +32,43 @@
+@@ -28,29 +32,33 @@
  
          stage("Build") {
              steps {
 -                sh "chmod +x ./gradlew"
--                sh "./gradlew clean build -PreleaseType=snapshot"
+-                sh "./gradlew clean build -PreleaseType=port"
 +                dir("${WORKSPACE}/${majorMc}") {
 +                    sh "chmod +x ./gradlew"
 +                    sh "./gradlew build -PreleaseType=${reltype}"
-+                }
-+            }
-+        }
-+
-+        stage("Publish to Maven") {
-+            steps {
-+                dir ("${WORKSPACE}/${majorMc}") {
-+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-+                        sh "./gradlew publish -PreleaseType=${reltype}"
-+                    }
 +                }
              }
          }

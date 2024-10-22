@@ -1,0 +1,11 @@
+--- a/Fabric/src/main/resources/fabric.mod.json
++++ b/Fabric/src/main/resources/fabric.mod.json
+@@ -29,7 +29,7 @@
+   "depends": {
+     "fabricloader": ">=0.16",
+     "fabric": "*",
+-    "minecraft": "*",
++    "minecraft": ">=1.21.2",
+     "java": ">=21"
+   },
+   "accessWidener": "pocketmachines.accesswidener"

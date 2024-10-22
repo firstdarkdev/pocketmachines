@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:item_frame",
+    "minecraft:blast_furnace"
+  ],
+  "result": {
+    "count": 1,
+    "id": "pocketmachines:pocket_blast_furnace"
+  }
+}

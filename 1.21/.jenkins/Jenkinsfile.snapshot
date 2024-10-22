@@ -38,16 +38,6 @@ pipeline {
                 }
             }
         }
-
-        stage("Publish to Maven") {
-            steps {
-                dir ("${WORKSPACE}/${majorMc}") {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh "./gradlew publish -PreleaseType=${reltype}"
-                    }
-                }
-            }
-        }
     }
 
     post {
