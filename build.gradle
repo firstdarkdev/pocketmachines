@@ -10,7 +10,7 @@ plugins {
 var relType = project.properties["releaseType"] ?: "${release_type}"
 
 ext {
-    isPort = (relType == 'port')
+    isPort = false //(relType == 'port')
 }
 
 orion.setup {
