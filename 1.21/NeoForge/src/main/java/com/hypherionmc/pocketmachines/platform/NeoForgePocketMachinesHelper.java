@@ -6,6 +6,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
 import java.util.function.BiFunction;
@@ -14,8 +15,8 @@ import java.util.function.BiFunction;
 public class NeoForgePocketMachinesHelper implements PocketMachinesHelper {
 
     @Override
-    public int getBurnTime(ItemStack stack) {
-        return AbstractFurnaceBlockEntity.getFuel().getOrDefault(stack.getItem(), 0);
+    public int getBurnTime(ItemStack stack, RecipeType type) {
+        return stack.isEmpty() ? 0 : stack.getBurnTime(type);
     }
 
     @Override

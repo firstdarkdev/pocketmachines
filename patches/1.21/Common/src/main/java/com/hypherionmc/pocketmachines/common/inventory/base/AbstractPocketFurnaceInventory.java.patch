@@ -163,7 +163,7 @@
 -    protected int getBurnDuration(FuelValues fuelValues, ItemStack itemStack) {
 -        return fuelValues.burnDuration(itemStack);
 +    protected int getBurnDuration(ItemStack itemStack) {
-+        return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack);
++        return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack, this.recipeType);
      }
  
 -    private int getTotalCookTime(ServerLevel level) {
@@ -181,7 +181,7 @@
          } else {
              ItemStack itemStack2 = this.items.get(1);
 -            return PersistedMachines.getLevel() != null && PersistedMachines.getLevel().fuelValues().isFuel(itemStack) || itemStack.is(Items.BUCKET) && !itemStack2.is(Items.BUCKET);
-+            return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack) > 0 || itemStack.is(Items.BUCKET) && !itemStack2.is(Items.BUCKET);
++            return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack, null) > 0 || itemStack.is(Items.BUCKET) && !itemStack2.is(Items.BUCKET);
          }
      }
  

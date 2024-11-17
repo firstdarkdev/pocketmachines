@@ -5,6 +5,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.function.BiFunction;
 
@@ -12,7 +13,7 @@ public interface PocketMachinesHelper {
 
     public static final PocketMachinesHelper INSTANCE = InternalServiceUtil.load(PocketMachinesHelper.class);
 
-    int getBurnTime(ItemStack stack);
+    int getBurnTime(ItemStack stack, RecipeType type);
     <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> creator, FeatureFlagSet flags);
 
 }

@@ -252,7 +252,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
     }
 
     protected int getBurnDuration(ItemStack itemStack) {
-        return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack);
+        return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack, this.recipeType);
     }
 
     private int getTotalCookTime(Level level) {
@@ -326,7 +326,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
             return true;
         } else {
             ItemStack itemStack2 = this.items.get(1);
-            return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack) > 0 || itemStack.is(Items.BUCKET) && !itemStack2.is(Items.BUCKET);
+            return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack, null) > 0 || itemStack.is(Items.BUCKET) && !itemStack2.is(Items.BUCKET);
         }
     }
 
