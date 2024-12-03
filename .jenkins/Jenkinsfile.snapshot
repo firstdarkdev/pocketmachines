@@ -44,7 +44,7 @@ pipeline {
                 projectName: "${projectName}",
                 projectIcon: "${projectIcon}",
                 modLoaders: "neoforge|fabric|quilt",
-                minecraftVersions: "1.21.2-rc1",
+                minecraftVersions: "1.21.3|1.21.4",
                 type: "snapshot",
                 dependsOn: "",
                 failWebhook: env.SSS_WEBHOOK,
