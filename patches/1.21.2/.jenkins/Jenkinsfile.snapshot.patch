@@ -7,7 +7,7 @@
 +def JDK = "21";
 +def majorMc = "1.21.2";
 +def modLoaders = "neoforge|fabric|quilt";
-+def supportedMc = "1.21.3";
++def supportedMc = "1.21.3|1.21.4";
 +def reltype = "snapshot";
  
  pipeline {
@@ -65,7 +65,7 @@
                  projectName: "${projectName}",
                  projectIcon: "${projectIcon}",
 -                modLoaders: "neoforge|fabric|quilt",
--                minecraftVersions: "1.21.2-rc1",
+-                minecraftVersions: "1.21.3|1.21.4",
 +                modLoaders: "${modLoaders}",
 +                minecraftVersions: "${supportedMc}",
                  type: "snapshot",

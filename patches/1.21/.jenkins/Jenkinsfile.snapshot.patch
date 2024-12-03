@@ -65,7 +65,7 @@
                  projectName: "${projectName}",
                  projectIcon: "${projectIcon}",
 -                modLoaders: "neoforge|fabric|quilt",
--                minecraftVersions: "1.21.2-rc1",
+-                minecraftVersions: "1.21.3|1.21.4",
 +                modLoaders: "${modLoaders}",
 +                minecraftVersions: "${supportedMc}",
                  type: "snapshot",
