@@ -9,3 +9,18 @@
  
  #Mod
  mod_author=HypherionSA
+@@ -12,11 +12,11 @@
+ mod_name=Simple Pocket Machines
+ 
+ # Shared
+-minecraft_version=1.21.5
++minecraft_version=1.21.2
+ 
+ # Fabric
+-fabric_loader=0.16.10
+-fabric_api=0.119.5+1.21.5
++fabric_loader=0.16.7
++fabric_api=0.106.1+1.21.2
+ 
+ # NeoForge
+ neoforge_version=0-beta

@@ -1,26 +1,21 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BaseTickablePocketItem.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BaseTickablePocketItem.java
-@@ -4,24 +4,21 @@
- import com.hypherionmc.pocketmachines.common.world.SaveHolder;
+@@ -5,13 +5,12 @@
  import net.minecraft.core.component.DataComponents;
  import net.minecraft.nbt.CompoundTag;
--import net.minecraft.resources.ResourceKey;
+ import net.minecraft.resources.ResourceKey;
 -import net.minecraft.server.level.ServerLevel;
  import net.minecraft.world.entity.Entity;
 -import net.minecraft.world.entity.EquipmentSlot;
  import net.minecraft.world.entity.player.Player;
--import net.minecraft.world.item.Item;
+ import net.minecraft.world.item.Item;
  import net.minecraft.world.item.ItemStack;
  import net.minecraft.world.item.component.CustomData;
 +import net.minecraft.world.level.Level;
  import org.jetbrains.annotations.NotNull;
  
  public abstract class BaseTickablePocketItem<T extends ISaveableContainer> extends BasePocketItem<T> {
- 
--    public BaseTickablePocketItem(SaveHolder<T> saveHolder, String nbtKey, ResourceKey<Item> key) {
--        super(saveHolder, nbtKey, key);
-+    public BaseTickablePocketItem(SaveHolder<T> saveHolder, String nbtKey) {
-+        super(saveHolder, nbtKey);
+@@ -21,7 +20,7 @@
      }
  
      @Override
@@ -29,7 +24,7 @@
          if (!levelIn.isClientSide && entityIn instanceof Player player) {
              CustomData tag = stack.get(DataComponents.CUSTOM_DATA);
              if (tag == null)
-@@ -31,10 +28,10 @@
+@@ -31,10 +30,10 @@
                  return;
  
              CompoundTag compoundTag = tag.copyTag();

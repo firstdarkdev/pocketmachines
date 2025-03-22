@@ -1,0 +1,33 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/SaveHolder.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/SaveHolder.java
+@@ -50,7 +50,7 @@
+         return items.isEmpty();
+     }
+ 
+-    ListTag write(HolderLookup.Provider provider) {
++    void write(CompoundTag tag, HolderLookup.Provider provider) {
+         ListTag itemsNbt = new ListTag();
+ 
+         for (SaveItem<T> item : items) {
+@@ -61,14 +61,16 @@
+             itemsNbt.add(itemTag);
+         }
+ 
+-        return itemsNbt;
++        tag.put(NBT_TAG_KEY, itemsNbt);
+     }
+ 
+-    void read(ListTag itemsNbt, HolderLookup.Provider provider) {
++    void read(CompoundTag tag, HolderLookup.Provider provider) {
++        ListTag itemsNbt = tag.getList(NBT_TAG_KEY, ListTag.TAG_COMPOUND);
++
+         for (int i = 0; i < itemsNbt.size(); i++) {
+-            CompoundTag compoundTag = itemsNbt.getCompoundOrEmpty(i);
+-            SaveItem<T> item = new SaveItem<>(deserializer.apply(compoundTag, provider), compoundTag.getStringOr("UserId", "INVALID"));
+-            item.setStackId(compoundTag.getStringOr("StackId", generateRandomId()));
++            CompoundTag compoundTag = itemsNbt.getCompound(i);
++            SaveItem<T> item = new SaveItem<>(deserializer.apply(compoundTag, provider), compoundTag.getString("UserId"));
++            item.setStackId(compoundTag.getString("StackId"));
+             items.add(item);
+         }
+     }

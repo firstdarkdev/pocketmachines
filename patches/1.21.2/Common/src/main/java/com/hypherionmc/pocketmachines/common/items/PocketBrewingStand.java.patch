@@ -1,6 +1,6 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/PocketBrewingStand.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/PocketBrewingStand.java
-@@ -3,21 +3,17 @@
+@@ -3,10 +3,8 @@
  import com.hypherionmc.pocketmachines.common.inventory.PocketBrewingStandInventory;
  import com.hypherionmc.pocketmachines.common.items.base.BaseTickablePocketItem;
  import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
@@ -11,19 +11,7 @@
  import net.minecraft.world.entity.player.Player;
  import net.minecraft.world.item.ItemStack;
  import net.minecraft.world.level.Level;
- import org.jetbrains.annotations.NotNull;
- 
--import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;
--
- public class PocketBrewingStand extends BaseTickablePocketItem<PocketBrewingStandInventory> {
- 
-     public PocketBrewingStand() {
--        super(PersistedMachines.POCKET_BREWING_STAND, "TG_POCKET_BREWING_STAND_INDEX", makeResourceKey("pocket_brewing_stand"));
-+        super(PersistedMachines.POCKET_BREWING_STAND, "TG_POCKET_BREWING_STAND_INDEX");
-     }
- 
-     @Override
-@@ -26,7 +22,7 @@
+@@ -26,7 +24,7 @@
      }
  
      @Override
