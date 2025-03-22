@@ -50,7 +50,7 @@ public final class SaveHolder<T extends ISaveableContainer> {
         return items.isEmpty();
     }
 
-    void write(CompoundTag tag, HolderLookup.Provider provider) {
+    ListTag write(HolderLookup.Provider provider) {
         ListTag itemsNbt = new ListTag();
 
         for (SaveItem<T> item : items) {
@@ -61,16 +61,14 @@ public final class SaveHolder<T extends ISaveableContainer> {
             itemsNbt.add(itemTag);
         }
 
-        tag.put(NBT_TAG_KEY, itemsNbt);
+        return itemsNbt;
     }
 
-    void read(CompoundTag tag, HolderLookup.Provider provider) {
-        ListTag itemsNbt = tag.getList(NBT_TAG_KEY, ListTag.TAG_COMPOUND);
-
+    void read(ListTag itemsNbt, HolderLookup.Provider provider) {
         for (int i = 0; i < itemsNbt.size(); i++) {
-            CompoundTag compoundTag = itemsNbt.getCompound(i);
-            SaveItem<T> item = new SaveItem<>(deserializer.apply(compoundTag, provider), compoundTag.getString("UserId"));
-            item.setStackId(compoundTag.getString("StackId"));
+            CompoundTag compoundTag = itemsNbt.getCompoundOrEmpty(i);
+            SaveItem<T> item = new SaveItem<>(deserializer.apply(compoundTag, provider), compoundTag.getStringOr("UserId", "INVALID"));
+            item.setStackId(compoundTag.getStringOr("StackId", generateRandomId()));
             items.add(item);
         }
     }

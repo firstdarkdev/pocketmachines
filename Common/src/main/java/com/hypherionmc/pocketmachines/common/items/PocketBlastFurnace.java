@@ -6,6 +6,7 @@ import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,8 +26,8 @@ public class PocketBlastFurnace extends BaseTickablePocketItem<PocketBlastFurnac
     }
 
     @Override
-    public void tickItem(PocketBlastFurnaceInventory container, @NotNull ItemStack stack, Level level, @NotNull Entity entity, int itemSlow, boolean isSelected) {
-        container.tick((ServerLevel) level);
+    public void tickItem(PocketBlastFurnaceInventory container, @NotNull ItemStack stack, ServerLevel level, @NotNull Entity entity, EquipmentSlot slot) {
+        container.tick(level);
     }
 
 }

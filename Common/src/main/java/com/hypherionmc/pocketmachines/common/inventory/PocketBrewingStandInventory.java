@@ -173,12 +173,12 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
     public void load(CompoundTag compoundTag, HolderLookup.Provider provider) {
         this.items.clear();
         ContainerHelper.loadAllItems(compoundTag, this.items, provider);
-        this.brewTime = compoundTag.getShort("BrewTime");
+        this.brewTime = compoundTag.getShortOr("BrewTime", (short) 0);
         if (this.brewTime > 0) {
             this.ingredient = this.items.get(3).getItem();
         }
 
-        this.fuel = compoundTag.getByte("Fuel");
+        this.fuel = compoundTag.getByteOr("Fuel", (byte) 0);
     }
 
     public void save(@NotNull CompoundTag compoundTag, HolderLookup.@NotNull Provider provider) {

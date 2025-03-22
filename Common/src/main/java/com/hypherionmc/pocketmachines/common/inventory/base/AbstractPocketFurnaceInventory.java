@@ -108,14 +108,14 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
     public void load(CompoundTag tag, HolderLookup.Provider provider) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(tag, this.items, provider);
-        this.litTime = tag.getShort("BurnTime");
-        this.cookingProgress = tag.getShort("CookTime");
-        this.cookingTotalTime = tag.getShort("CookTimeTotal");
+        this.litTime = tag.getShortOr("BurnTime", (short) 0);
+        this.cookingProgress = tag.getShortOr("CookTime", (short) 0);
+        this.cookingTotalTime = tag.getShortOr("CookTimeTotal", (short) 0);
         this.litDuration = 0;
-        CompoundTag compoundTag2 = tag.getCompound("RecipesUsed");
+        CompoundTag compoundTag2 = tag.getCompoundOrEmpty("RecipesUsed");
 
-        for (String string : compoundTag2.getAllKeys()) {
-            this.recipesUsed.put(ResourceLocation.parse(string), compoundTag2.getInt(string));
+        for (String string : compoundTag2.keySet()) {
+            this.recipesUsed.put(ResourceLocation.parse(string), compoundTag2.getIntOr(string, 0));
         }
     }
 

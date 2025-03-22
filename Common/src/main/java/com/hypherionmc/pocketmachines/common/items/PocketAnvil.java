@@ -4,15 +4,11 @@ import com.hypherionmc.pocketmachines.common.items.base.BasePocketGuiItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AnvilBlock;
 import org.jetbrains.annotations.NotNull;
 
 import static com.hypherionmc.pocketmachines.ModConstants.makeResourceKey;

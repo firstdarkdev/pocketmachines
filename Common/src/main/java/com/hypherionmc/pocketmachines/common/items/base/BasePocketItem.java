@@ -39,7 +39,7 @@ public abstract class BasePocketItem<T extends ISaveableContainer> extends Item 
 
             tag = stack.get(DataComponents.CUSTOM_DATA);
             CompoundTag compoundTag = tag.copyTag();
-            openScreen(saveHolder.getInstance(compoundTag.getString(NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
+            openScreen(saveHolder.getInstance(compoundTag.getStringOr(NBT_KEY, NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
         }
 
         return InteractionResult.SUCCESS;
