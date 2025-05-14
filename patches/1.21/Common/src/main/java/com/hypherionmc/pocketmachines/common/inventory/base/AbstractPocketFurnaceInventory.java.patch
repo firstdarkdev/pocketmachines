@@ -121,7 +121,7 @@
 +                this.cookingProgress++;
                  if (this.cookingProgress == this.cookingTotalTime) {
                      this.cookingProgress = 0;
-                     this.cookingTotalTime = getTotalCookTime(level);
+                     this.cookingTotalTime = getTotalCookTime(level, this.getItem(0));
 -                    if (burn(level.registryAccess(), lv4, lv3, this.items, i)) {
 -                        this.setRecipeUsed(lv4);
 +                    if (burn(level.registryAccess(), recipeHolder, this.items, i)) {
@@ -187,9 +187,9 @@
 +        return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack, this.recipeType);
      }
  
--    private int getTotalCookTime(ServerLevel level) {
-+    private int getTotalCookTime(Level level) {
-         SingleRecipeInput singleRecipeInput = new SingleRecipeInput(this.getItem(0));
+-    private int getTotalCookTime(ServerLevel level, ItemStack stack) {
++    private int getTotalCookTime(Level level, ItemStack stack) {
+         SingleRecipeInput singleRecipeInput = new SingleRecipeInput(stack);
          return this.quickCheck
                  .getRecipeFor(singleRecipeInput, level)
 -                .map(recipeHolder -> recipeHolder.value().cookingTime())
@@ -197,7 +197,7 @@
                  .orElse(200);
      }
  
-@@ -326,7 +326,7 @@
+@@ -327,7 +327,7 @@
              return true;
          } else {
              ItemStack itemStack2 = this.items.get(1);

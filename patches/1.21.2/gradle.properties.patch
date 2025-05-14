@@ -1,8 +1,8 @@
 --- a/gradle.properties
 +++ b/gradle.properties
 @@ -4,7 +4,7 @@
- version_patch=2
- version_build=1
+ version_patch=3
+ version_build=0
  project_group=com.hypherionmc.pocketmachines
 -release_type=port
 +release_type=release

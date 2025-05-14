@@ -181,7 +181,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
                 ++this.cookingProgress;
                 if (this.cookingProgress == this.cookingTotalTime) {
                     this.cookingProgress = 0;
-                    this.cookingTotalTime = getTotalCookTime(level);
+                    this.cookingTotalTime = getTotalCookTime(level, this.getItem(0));
                     if (burn(level.registryAccess(), lv4, lv3, this.items, i)) {
                         this.setRecipeUsed(lv4);
                     }
@@ -255,8 +255,8 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         return fuelValues.burnDuration(itemStack);
     }
 
-    private int getTotalCookTime(ServerLevel level) {
-        SingleRecipeInput singleRecipeInput = new SingleRecipeInput(this.getItem(0));
+    private int getTotalCookTime(ServerLevel level, ItemStack stack) {
+        SingleRecipeInput singleRecipeInput = new SingleRecipeInput(stack);
         return this.quickCheck
                 .getRecipeFor(singleRecipeInput, level)
                 .map(recipeHolder -> recipeHolder.value().cookingTime())
@@ -306,8 +306,9 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         boolean bl = !itemStack.isEmpty() && ItemStack.isSameItemSameComponents(itemStack2, itemStack);
         this.items.set(i, itemStack);
         itemStack.limitSize(this.getMaxStackSize(itemStack));
+
         if (i == 0 && !bl) {
-            this.cookingTotalTime = 200;
+            this.cookingTotalTime = PersistedMachines.getLevel() != null ? this.getTotalCookTime(PersistedMachines.getLevel(), itemStack) : 200;
             this.cookingProgress = 0;
             this.setChanged();
         }
