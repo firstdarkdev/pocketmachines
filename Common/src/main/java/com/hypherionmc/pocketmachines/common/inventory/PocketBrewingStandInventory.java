@@ -20,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,14 +63,14 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
         }
     };
 
-    public PocketBrewingStandInventory(CompoundTag tag, HolderLookup.Provider provider) {
+    public PocketBrewingStandInventory(ValueInput input) {
         super(5);
-        if (tag != null && provider != null)
-            this.load(tag, provider);
+        if (input != null)
+            this.load(input);
     }
 
     public PocketBrewingStandInventory() {
-        this(null, null);
+        this(null);
     }
 
     @Override
@@ -170,9 +172,9 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
     }
 
 
-    public void load(CompoundTag compoundTag, HolderLookup.Provider provider) {
+    public void load(ValueInput compoundTag) {
         this.items.clear();
-        ContainerHelper.loadAllItems(compoundTag, this.items, provider);
+        ContainerHelper.loadAllItems(compoundTag, this.items);
         this.brewTime = compoundTag.getShortOr("BrewTime", (short) 0);
         if (this.brewTime > 0) {
             this.ingredient = this.items.get(3).getItem();
@@ -181,9 +183,9 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
         this.fuel = compoundTag.getByteOr("Fuel", (byte) 0);
     }
 
-    public void save(@NotNull CompoundTag compoundTag, HolderLookup.@NotNull Provider provider) {
+    public void save(@NotNull ValueOutput compoundTag) {
         compoundTag.putShort("BrewTime", (short)this.brewTime);
-        ContainerHelper.saveAllItems(compoundTag, this.items, provider);
+        ContainerHelper.saveAllItems(compoundTag, this.items);
         compoundTag.putByte("Fuel", (byte)this.fuel);
     }
 

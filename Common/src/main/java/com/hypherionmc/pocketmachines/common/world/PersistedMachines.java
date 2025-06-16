@@ -15,10 +15,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.ValueInput;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 
@@ -101,7 +103,7 @@ public final class PersistedMachines extends SavedData {
         holder.read(tag, level.registryAccess());
     }
 
-    private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, BiFunction<CompoundTag, HolderLookup.Provider, T> deserializer, String tag) {
+    private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, Function<ValueInput, T> deserializer, String tag) {
         SaveHolder<T> holder = new SaveHolder<>(constuctor, deserializer, tag);
         registeredItems.add(holder);
         return holder;

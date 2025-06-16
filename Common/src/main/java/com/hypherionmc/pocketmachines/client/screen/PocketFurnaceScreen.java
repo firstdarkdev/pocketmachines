@@ -21,6 +21,6 @@ public class PocketFurnaceScreen extends AbstractPocketFurnaceScreen<PocketFurna
     private static final List<RecipeBookComponent.TabInfo> TABS = List.of(new RecipeBookComponent.TabInfo(SearchRecipeBookCategory.FURNACE), new RecipeBookComponent.TabInfo(Items.PORKCHOP, RecipeBookCategories.FURNACE_FOOD), new RecipeBookComponent.TabInfo(Items.STONE, RecipeBookCategories.FURNACE_BLOCKS), new RecipeBookComponent.TabInfo(Items.LAVA_BUCKET, Items.EMERALD, RecipeBookCategories.FURNACE_MISC));
 
     public PocketFurnaceScreen(PocketFurnaceMenu menu, Inventory playerInventory, Component name) {
-        super(menu, FILTER_NAME, playerInventory, name, TEXTURE, LIT_PROGRESS_SPRITE, BURN_PROGRESS_SPRITE, TABS);
+        super(menu, name, playerInventory, FILTER_NAME, TEXTURE, LIT_PROGRESS_SPRITE, BURN_PROGRESS_SPRITE, TABS);
     }
 }

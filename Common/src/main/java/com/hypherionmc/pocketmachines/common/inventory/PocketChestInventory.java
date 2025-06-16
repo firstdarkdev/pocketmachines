@@ -16,6 +16,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,15 +29,15 @@ public class PocketChestInventory extends SimpleContainer implements MenuProvide
     private static final Component TITLE = Component.translatable("item.pocketmachines.pocket_chest");
     protected final NonNullList<ItemStack> items = NonNullList.withSize(INVENTORY_SIZE, ItemStack.EMPTY);
 
-    public PocketChestInventory(CompoundTag tag, HolderLookup.Provider provider) {
+    public PocketChestInventory(ValueInput input) {
         super(INVENTORY_SIZE);
 
-        if (tag != null && provider != null)
-            this.load(tag, provider);
+        if (input != null)
+            this.load(input);
     }
 
     public PocketChestInventory() {
-        this(null, null);
+        this(null);
     }
 
     @Nullable
@@ -49,13 +51,13 @@ public class PocketChestInventory extends SimpleContainer implements MenuProvide
         return TITLE;
     }
 
-    public void load(CompoundTag tag, HolderLookup.Provider provider) {
+    public void load(ValueInput tag) {
         this.items.clear();
-        ContainerHelper.loadAllItems(tag, this.items, provider);
+        ContainerHelper.loadAllItems(tag, this.items);
     }
 
-    public void save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-        ContainerHelper.saveAllItems(tag, this.items, provider);
+    public void save(@NotNull ValueOutput tag) {
+        ContainerHelper.saveAllItems(tag, this.items);
     }
 
     @Override

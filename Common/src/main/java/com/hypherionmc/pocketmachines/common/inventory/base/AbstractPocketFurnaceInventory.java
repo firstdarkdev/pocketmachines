@@ -3,12 +3,15 @@ package com.hypherionmc.pocketmachines.common.inventory.base;
 import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
 import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -26,16 +29,20 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.FuelValues;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractPocketFurnaceInventory extends SimpleContainer implements MenuProvider, ISaveableContainer {
 
     protected final RecipeType<? extends AbstractCookingRecipe> recipeType;
     private final Component name;
-    private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
+    private final Reference2IntOpenHashMap<ResourceKey<Recipe<?>>> recipesUsed = new Reference2IntOpenHashMap<>();
+    private static final Codec<Map<ResourceKey<Recipe<?>>, Integer>> RECIPES_USED_CODEC = Codec.unboundedMap(Recipe.KEY_CODEC, Codec.INT);
     protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     private int litTime, litDuration, cookingProgress, cookingTotalTime;
     private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> quickCheck;
@@ -76,19 +83,19 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         }
     };
 
-    public AbstractPocketFurnaceInventory(RecipeType<? extends AbstractCookingRecipe> recipeType, CompoundTag nbt, HolderLookup.Provider provider, Component name) {
+    public AbstractPocketFurnaceInventory(RecipeType<? extends AbstractCookingRecipe> recipeType, ValueInput valueInput, Component name) {
         super(3);
         this.recipeType = recipeType;
         this.name = name;
 
         quickCheck = RecipeManager.createCheck(recipeType);
 
-        if (nbt != null && provider != null)
-            this.load(nbt, provider);
+        if (valueInput != null)
+            this.load(valueInput);
     }
 
     public AbstractPocketFurnaceInventory(RecipeType<? extends AbstractCookingRecipe> recipeType, Component name) {
-        this(recipeType, null, null, name);
+        this(recipeType, null, name);
     }
 
     @Nullable
@@ -105,28 +112,23 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         return this.name;
     }
 
-    public void load(CompoundTag tag, HolderLookup.Provider provider) {
+    public void load(ValueInput tag) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.items, provider);
+        ContainerHelper.loadAllItems(tag, this.items);
         this.litTime = tag.getShortOr("BurnTime", (short) 0);
         this.cookingProgress = tag.getShortOr("CookTime", (short) 0);
         this.cookingTotalTime = tag.getShortOr("CookTimeTotal", (short) 0);
         this.litDuration = 0;
-        CompoundTag compoundTag2 = tag.getCompoundOrEmpty("RecipesUsed");
-
-        for (String string : compoundTag2.keySet()) {
-            this.recipesUsed.put(ResourceLocation.parse(string), compoundTag2.getIntOr(string, 0));
-        }
+        this.recipesUsed.clear();
+        this.recipesUsed.putAll(tag.read("RecipesUsed", RECIPES_USED_CODEC).orElse(Map.of()));
     }
 
-    public void save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+    public void save(@NotNull ValueOutput tag) {
         tag.putShort("BurnTime", (short)this.litTime);
         tag.putShort("CookTime", (short)this.cookingProgress);
         tag.putShort("CookTimeTotal", (short)this.cookingTotalTime);
-        ContainerHelper.saveAllItems(tag, this.items, provider);
-        CompoundTag compoundTag2 = new CompoundTag();
-        this.recipesUsed.forEach((resourceLocation, integer) -> compoundTag2.putInt(resourceLocation.toString(), integer));
-        tag.put("RecipesUsed", compoundTag2);
+        ContainerHelper.saveAllItems(tag, this.items);
+        tag.store("RecipesUsed", RECIPES_USED_CODEC, this.recipesUsed);
     }
 
     private boolean isLit() {
@@ -246,8 +248,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
 
     public void setRecipeUsed(@Nullable RecipeHolder<?> recipeHolder) {
         if (recipeHolder != null) {
-            ResourceLocation resourceLocation = recipeHolder.id().location();
-            this.recipesUsed.addTo(resourceLocation, 1);
+            this.recipesUsed.addTo(recipeHolder.id(), 1);
         }
     }
 

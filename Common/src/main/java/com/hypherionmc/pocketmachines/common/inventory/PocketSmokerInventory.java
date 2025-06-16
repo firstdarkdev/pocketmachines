@@ -10,12 +10,13 @@ import net.minecraft.world.inventory.SmokerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.FuelValues;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
 public class PocketSmokerInventory extends AbstractPocketFurnaceInventory {
 
-    public PocketSmokerInventory(CompoundTag nbt, HolderLookup.Provider provider) {
-        super(RecipeType.SMOKING, nbt, provider, Component.translatable("item.pocketmachines.pocket_smoker"));
+    public PocketSmokerInventory(ValueInput input) {
+        super(RecipeType.SMOKING, input, Component.translatable("item.pocketmachines.pocket_smoker"));
     }
 
     public PocketSmokerInventory() {
