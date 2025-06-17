@@ -1,0 +1,11 @@
+--- a/.jenkins/Jenkinsfile.snapshot
++++ b/.jenkins/Jenkinsfile.snapshot
+@@ -44,7 +44,7 @@
+                 projectName: "${projectName}",
+                 projectIcon: "${projectIcon}",
+                 modLoaders: "neoforge|fabric|quilt",
+-                minecraftVersions: "1.21.6-rc1",
++                minecraftVersions: "1.21.6",
+                 type: "snapshot",
+                 dependsOn: "",
+                 failWebhook: env.SSS_WEBHOOK,
