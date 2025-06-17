@@ -1,0 +1,24 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
+@@ -15,12 +15,10 @@
+ import net.minecraft.world.level.saveddata.SavedData;
+ import net.minecraft.world.level.saveddata.SavedDataType;
+ import net.minecraft.world.level.storage.DimensionDataStorage;
+-import net.minecraft.world.level.storage.ValueInput;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.function.BiFunction;
+-import java.util.function.Function;
+ import java.util.function.Supplier;
+ 
+ 
+@@ -103,7 +101,7 @@
+         holder.read(tag, level.registryAccess());
+     }
+ 
+-    private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, Function<ValueInput, T> deserializer, String tag) {
++    private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, BiFunction<CompoundTag, HolderLookup.Provider, T> deserializer, String tag) {
+         SaveHolder<T> holder = new SaveHolder<>(constuctor, deserializer, tag);
+         registeredItems.add(holder);
+         return holder;

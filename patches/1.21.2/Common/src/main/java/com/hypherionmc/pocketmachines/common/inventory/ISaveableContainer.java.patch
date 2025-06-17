@@ -1,0 +1,14 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/ISaveableContainer.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/ISaveableContainer.java
+@@ -1,8 +1,9 @@
+ package com.hypherionmc.pocketmachines.common.inventory;
+ 
+-import net.minecraft.world.level.storage.ValueOutput;
++import net.minecraft.core.HolderLookup;
++import net.minecraft.nbt.CompoundTag;
+ import org.jetbrains.annotations.NotNull;
+ 
+ public interface ISaveableContainer {
+-    void save(@NotNull ValueOutput input);
++    void save(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider);
+ }

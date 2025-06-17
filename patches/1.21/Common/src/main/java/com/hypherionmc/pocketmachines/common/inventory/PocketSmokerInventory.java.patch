@@ -1,14 +1,23 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketSmokerInventory.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketSmokerInventory.java
-@@ -9,7 +9,6 @@
+@@ -9,14 +9,12 @@
  import net.minecraft.world.inventory.SmokerMenu;
  import net.minecraft.world.item.ItemStack;
  import net.minecraft.world.item.crafting.RecipeType;
 -import net.minecraft.world.level.block.entity.FuelValues;
+-import net.minecraft.world.level.storage.ValueInput;
  import org.jetbrains.annotations.NotNull;
  
  public class PocketSmokerInventory extends AbstractPocketFurnaceInventory {
-@@ -23,8 +22,8 @@
+ 
+-    public PocketSmokerInventory(ValueInput input) {
+-        super(RecipeType.SMOKING, input, Component.translatable("item.pocketmachines.pocket_smoker"));
++    public PocketSmokerInventory(CompoundTag nbt, HolderLookup.Provider provider) {
++        super(RecipeType.SMOKING, nbt, provider, Component.translatable("item.pocketmachines.pocket_smoker"));
+     }
+ 
+     public PocketSmokerInventory() {
+@@ -24,8 +22,8 @@
      }
  
      @Override

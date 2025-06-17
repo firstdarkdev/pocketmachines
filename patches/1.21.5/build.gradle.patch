@@ -1,0 +1,11 @@
+--- a/build.gradle
++++ b/build.gradle
+@@ -10,7 +10,7 @@
+ var relType = project.properties["releaseType"] ?: "${release_type}"
+ 
+ ext {
+-    isPort = true //(relType == 'port')
++    isPort = false //(relType == 'port')
+ }
+ 
+ orion.setup {

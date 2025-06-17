@@ -1,6 +1,6 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
-@@ -1,20 +1,14 @@
+@@ -1,26 +1,18 @@
  package com.hypherionmc.pocketmachines.common.world;
  
  import com.hypherionmc.pocketmachines.common.inventory.*;
@@ -18,12 +18,18 @@
  import net.minecraft.world.level.saveddata.SavedData;
 -import net.minecraft.world.level.saveddata.SavedDataType;
  import net.minecraft.world.level.storage.DimensionDataStorage;
+-import net.minecraft.world.level.storage.ValueInput;
 +import org.jetbrains.annotations.NotNull;
 +import org.jetbrains.annotations.Nullable;
  
  import java.util.ArrayList;
  import java.util.List;
-@@ -26,8 +20,12 @@
+ import java.util.function.BiFunction;
+-import java.util.function.Function;
+ import java.util.function.Supplier;
+ 
+ 
+@@ -28,8 +20,12 @@
  
      private static final String NAME = "PocketMachinesData";
      private static final List<SaveHolder<?>> registeredItems = new ArrayList<>();
@@ -36,7 +42,7 @@
      // Holders
      public static final SaveHolder<PocketFurnaceInventory> POCKET_FURNACE = register(PocketFurnaceInventory::new, PocketFurnaceInventory::new, "TG_FURNACE");
      public static final SaveHolder<PocketBlastFurnaceInventory> POCKET_BLAST_FURNACE = register(PocketBlastFurnaceInventory::new, PocketBlastFurnaceInventory::new, "TG_BLAST_FURNACE");
-@@ -35,45 +33,11 @@
+@@ -37,45 +33,11 @@
      public static final SaveHolder<PocketBrewingStandInventory> POCKET_BREWING_STAND = register(PocketBrewingStandInventory::new, PocketBrewingStandInventory::new, "TG_BREWING_STAND");
      public static final SaveHolder<PocketSmokerInventory> POCKET_SMOKER = register(PocketSmokerInventory::new, PocketSmokerInventory::new, "TG_SMOKER");
  
@@ -87,7 +93,7 @@
      }
  
      public static void resetAll() {
-@@ -85,7 +49,7 @@
+@@ -87,7 +49,7 @@
          if (level == null) return;
  
          DimensionDataStorage dimensionDataStorage = level.getDataStorage();
@@ -96,26 +102,34 @@
          PersistedMachines.level = level;
      }
  
-@@ -93,12 +57,14 @@
+@@ -95,15 +57,17 @@
          return level != null;
      }
  
 -    static ListTag saveData(SaveHolder<?> holder) {
 -        return holder.write(level.registryAccess());
+-    }
+-
+-    void read(SaveHolder<?> holder, ListTag tag) {
+-        holder.read(tag, level.registryAccess());
+-    }
+-
+-    private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, Function<ValueInput, T> deserializer, String tag) {
 +    @Override
 +    public @NotNull CompoundTag save(@NotNull CompoundTag nbt, HolderLookup.@NotNull Provider arg2) {
 +        registeredItems.forEach(i -> i.write(nbt, arg2));
 +        return nbt;
-     }
- 
--    void read(SaveHolder<?> holder, ListTag tag) {
--        holder.read(tag, level.registryAccess());
++    }
++
 +    void read(CompoundTag nbt, HolderLookup.Provider provider) {
 +        registeredItems.forEach(i -> i.read(nbt, provider));
-     }
- 
-     private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, BiFunction<CompoundTag, HolderLookup.Provider, T> deserializer, String tag) {
-@@ -111,5 +77,4 @@
++    }
++
++    private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, BiFunction<CompoundTag, HolderLookup.Provider, T> deserializer, String tag) {
+         SaveHolder<T> holder = new SaveHolder<>(constuctor, deserializer, tag);
+         registeredItems.add(holder);
+         return holder;
+@@ -113,5 +77,4 @@
          if (INSTANCE != null)
              INSTANCE.setDirty();
      }
