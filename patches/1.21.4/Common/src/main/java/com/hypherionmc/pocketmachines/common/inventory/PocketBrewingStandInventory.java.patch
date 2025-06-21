@@ -1,0 +1,57 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketBrewingStandInventory.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketBrewingStandInventory.java
+@@ -20,8 +20,6 @@
+ import net.minecraft.world.item.Items;
+ import net.minecraft.world.item.alchemy.PotionBrewing;
+ import net.minecraft.world.level.Level;
+-import net.minecraft.world.level.storage.ValueInput;
+-import net.minecraft.world.level.storage.ValueOutput;
+ import org.jetbrains.annotations.NotNull;
+ import org.jetbrains.annotations.Nullable;
+ 
+@@ -63,14 +61,14 @@
+         }
+     };
+ 
+-    public PocketBrewingStandInventory(ValueInput input) {
++    public PocketBrewingStandInventory(CompoundTag tag, HolderLookup.Provider provider) {
+         super(5);
+-        if (input != null)
+-            this.load(input);
++        if (tag != null && provider != null)
++            this.load(tag, provider);
+     }
+ 
+     public PocketBrewingStandInventory() {
+-        this(null);
++        this(null, null);
+     }
+ 
+     @Override
+@@ -172,20 +170,20 @@
+     }
+ 
+ 
+-    public void load(ValueInput compoundTag) {
++    public void load(CompoundTag compoundTag, HolderLookup.Provider provider) {
+         this.items.clear();
+-        ContainerHelper.loadAllItems(compoundTag, this.items);
+-        this.brewTime = compoundTag.getShortOr("BrewTime", (short) 0);
++        ContainerHelper.loadAllItems(compoundTag, this.items, provider);
++        this.brewTime = compoundTag.getShort("BrewTime");
+         if (this.brewTime > 0) {
+             this.ingredient = this.items.get(3).getItem();
+         }
+ 
+-        this.fuel = compoundTag.getByteOr("Fuel", (byte) 0);
++        this.fuel = compoundTag.getByte("Fuel");
+     }
+ 
+-    public void save(@NotNull ValueOutput compoundTag) {
++    public void save(@NotNull CompoundTag compoundTag, HolderLookup.@NotNull Provider provider) {
+         compoundTag.putShort("BrewTime", (short)this.brewTime);
+-        ContainerHelper.saveAllItems(compoundTag, this.items);
++        ContainerHelper.saveAllItems(compoundTag, this.items, provider);
+         compoundTag.putByte("Fuel", (byte)this.fuel);
+     }
+ 

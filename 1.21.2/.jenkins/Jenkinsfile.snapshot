@@ -3,7 +3,7 @@ def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePo
 def JDK = "21";
 def majorMc = "1.21.2";
 def modLoaders = "neoforge|fabric|quilt";
-def supportedMc = "1.21.3|1.21.4";
+def supportedMc = "1.21.3";
 def reltype = "snapshot";
 
 pipeline {

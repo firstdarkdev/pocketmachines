@@ -97,7 +97,7 @@
 +        tag.put("RecipesUsed", compoundTag2);
      }
  
-     private boolean isLit() {
+     public boolean isLit() {
 @@ -248,7 +246,8 @@
  
      public void setRecipeUsed(@Nullable RecipeHolder<?> recipeHolder) {

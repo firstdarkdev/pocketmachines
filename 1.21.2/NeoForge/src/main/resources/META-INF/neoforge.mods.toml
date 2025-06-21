@@ -17,13 +17,13 @@ description='''Simple, portable vanilla machines'''
 [[dependencies.${mod_id}]]
 modId="neoforge"
 type="required"
-versionRange="[21.2.0-beta,)"
+versionRange="[21.3.0-beta,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="minecraft"
 type="required"
-versionRange="[1.21.2,)"
+versionRange="[1.21.3,1.21.4)"
 ordering="NONE"
 side="BOTH"

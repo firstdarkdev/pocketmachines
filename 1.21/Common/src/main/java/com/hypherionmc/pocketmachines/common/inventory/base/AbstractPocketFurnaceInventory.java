@@ -131,7 +131,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         tag.put("RecipesUsed", compoundTag2);
     }
 
-    private boolean isLit() {
+    public boolean isLit() {
         return this.litTime > 0;
     }
 

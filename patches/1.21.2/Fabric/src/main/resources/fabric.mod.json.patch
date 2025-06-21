@@ -5,7 +5,7 @@
      "fabricloader": ">=0.16",
      "fabric": "*",
 -    "minecraft": "*",
-+    "minecraft": ">=1.21.2",
++    "minecraft": "1.21.3",
      "java": ">=21"
    },
    "accessWidener": "pocketmachines.accesswidener"

@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"gui_light": "front",
 	"textures": {
 		"2": "block/furnace_front",
 		"back": "block/item_frame",

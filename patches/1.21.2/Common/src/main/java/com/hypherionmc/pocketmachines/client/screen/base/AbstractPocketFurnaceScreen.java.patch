@@ -1,0 +1,12 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/client/screen/base/AbstractPocketFurnaceScreen.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/client/screen/base/AbstractPocketFurnaceScreen.java
+@@ -12,8 +12,7 @@
+ public class AbstractPocketFurnaceScreen<T extends AbstractPocketFurnaceMenu> extends AbstractFurnaceScreen<T> {
+ 
+     public AbstractPocketFurnaceScreen(T menuType, Component recipeBookComponent, Inventory playerInventory, Component name, ResourceLocation texture, ResourceLocation litProgressSprite, ResourceLocation burnProgressSprite, List<RecipeBookComponent.TabInfo> tabs) {
+-        super(menuType, playerInventory, recipeBookComponent, name, texture, litProgressSprite, burnProgressSprite, tabs);
++        super(menuType, playerInventory, name, recipeBookComponent, texture, litProgressSprite, burnProgressSprite, tabs);
+     }
+-
+ 
+ }

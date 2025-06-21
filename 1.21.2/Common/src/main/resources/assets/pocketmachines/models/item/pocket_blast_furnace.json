@@ -2,5 +2,13 @@
   "parent": "pocketmachines:item/pocket_item",
   "textures": {
     "2": "block/blast_furnace_front"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "pocketmachines:item/pocket_blast_furnace_lit"
+    }
+  ]
 }
