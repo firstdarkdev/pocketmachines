@@ -1,0 +1,45 @@
+package com.hypherionmc.pocketmachines.common.items.base;
+
+import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
+import com.hypherionmc.pocketmachines.common.world.SaveHolder;
+import lombok.Getter;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
+public abstract class BasePocketItem<T extends ISaveableContainer> extends Item {
+
+    @Getter
+    private final SaveHolder<T> saveHolder;
+    final String NBT_KEY;
+
+    public BasePocketItem(SaveHolder<T> saveHolder, String nbtKey) {
+        super(new Properties().stacksTo(1).fireResistant());
+        this.saveHolder = saveHolder;
+        this.NBT_KEY = nbtKey;
+    }
+
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(Level levelIn, @NotNull Player playerIn, @NotNull InteractionHand handIn) {
+        if (!levelIn.isClientSide() && !playerIn.isCrouching()) {
+            ItemStack stack = playerIn.getItemInHand(handIn);
+            CompoundTag tag = stack.getOrCreateTag();
+
+            if (!tag.contains(NBT_KEY)) {
+                tag.putString(NBT_KEY, saveHolder.createInstance(playerIn));
+                stack.setTag(tag);
+            }
+
+            openScreen(saveHolder.getInstance(tag.getString(NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
+        }
+
+        return InteractionResultHolder.success(playerIn.getItemInHand(handIn));
+    }
+
+    public abstract void openScreen(T container, Level level, @NotNull Player player, @NotNull InteractionHand hand);
+}

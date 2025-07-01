@@ -1,11 +1,14 @@
 // Adjust the output jar name here
-archivesBaseName = "${mod_name.replace(" ", "")}-NeoForge-${minecraft_version}"
+archivesBaseName = "${mod_name.replace(" ", "")}-Fabric-${minecraft_version}"
 
 dependencies {
-    // Add your dependencies here
+    // Add your own dependencies here
 
-    // Do not edit or remove
-    implementation project(":Common")
+    // Fabric API. Can be removed if not needed
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api}"
+
+    // Do not remove or edit!
+    implementation(project(":Common"))
 }
 
 /**
@@ -15,13 +18,9 @@ dependencies {
  */
 
 unimined.minecraft {
-    neoForge {
-        if (isPort) {
-            loader "net.neoforged:neoforge:${neoforge_version}:universal"
-        } else {
-            loader neoforge_version
-        }
-        mixinConfig("${mod_id}.mixins.json")
+    fabric {
+        loader fabric_loader
+        accessWidener(project(":Common").file("src/main/resources/pocketmachines.accesswidener"))
     }
 }
 
@@ -29,7 +28,7 @@ processResources {
     from project(":Common").sourceSets.main.resources
     def buildProps = project.properties.clone()
 
-    filesMatching("META-INF/neoforge.mods.toml") {
+    filesMatching(['fabric.mod.json']) {
         expand buildProps
     }
 }
@@ -53,10 +52,18 @@ publisher {
     setVersionType("release")
     setChangelog("https://raw.githubusercontent.com/hypherionmc/changelogs/refs/heads/main/pocketmachines.md")
     setProjectVersion("${minecraft_version}-${project.version}")
-    setDisplayName("[NeoForge 1.21.6/7] Simple Pocket Machines - ${project.version}")
-    setGameVersions("1.21.6", "1.21.7")
-    setLoaders("neoforge")
+    setDisplayName("[FABRIC/QUILT 1.20.1] Simple Pocket Machines - ${project.version}")
+    setGameVersions("1.20.1")
+    setLoaders("fabric", "quilt")
     setArtifact(remapJar)
     setCurseEnvironment("both")
     setIsManualRelease(true)
+
+    modrinthDepends {
+        required("fabric-api")
+    }
+
+    curseDepends {
+        required("fabric-api")
+    }
 }

@@ -1,0 +1,48 @@
+--- a/build.gradle
++++ b/build.gradle
+@@ -3,14 +3,14 @@
+     id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.8"
+     id "xyz.wagyourtail.unimined" version "1.2.9" apply false
+     id "com.hypherionmc.modutils.orion" version "1.0.22"
+-    id 'com.matyrobbrt.mc.registrationutils' version "1.21.0-0.2.1"
++    id 'com.matyrobbrt.mc.registrationutils' version "1.20.1-2.0.2"
+     id "com.hypherionmc.modutils.modpublisher" version "2.1.6"
+ }
+ 
+ var relType = project.properties["releaseType"] ?: "${release_type}"
+ 
+ ext {
+-    isPort = true //(relType == 'port')
++    isPort = false //(relType == 'port')
+ }
+ 
+ orion.setup {
+@@ -35,7 +35,7 @@
+     group 'com.hypherionmc.pocketmachines.reg'
+     projects {
+         Fabric { type 'Fabric' } // The fabric project
+-        NeoForge { type 'NeoForge' } // The neoforge project
++        NeoForge { type 'Forge' } // The neoforge project
+         Common { type 'Common' } // The common project
+     }
+ }
+@@ -49,8 +49,8 @@
+     apply plugin: 'com.hypherionmc.modutils.modpublisher'
+ 
+     group = rootProject.group
+-    sourceCompatibility = JavaVersion.VERSION_21
+-    targetCompatibility = JavaVersion.VERSION_21
++    sourceCompatibility = JavaVersion.VERSION_17
++    targetCompatibility = JavaVersion.VERSION_17
+ 
+     // Add your maven repositories here
+     repositories {
+@@ -95,7 +95,7 @@
+ 
+     tasks.withType(JavaCompile).configureEach {
+         it.options.encoding = 'UTF-8'
+-        it.options.release = 21
++        it.options.release = 17
+     }
+ 
+     tasks.withType(GenerateModuleMetadata).configureEach {

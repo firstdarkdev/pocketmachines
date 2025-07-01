@@ -1,0 +1,140 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketBrewingStandInventory.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/PocketBrewingStandInventory.java
+@@ -2,7 +2,6 @@
+ 
+ import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
+ import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
+-import net.minecraft.core.HolderLookup;
+ import net.minecraft.core.NonNullList;
+ import net.minecraft.nbt.CompoundTag;
+ import net.minecraft.network.chat.Component;
+@@ -20,8 +19,6 @@
+ import net.minecraft.world.item.Items;
+ import net.minecraft.world.item.alchemy.PotionBrewing;
+ import net.minecraft.world.level.Level;
+-import net.minecraft.world.level.storage.ValueInput;
+-import net.minecraft.world.level.storage.ValueOutput;
+ import org.jetbrains.annotations.NotNull;
+ import org.jetbrains.annotations.Nullable;
+ 
+@@ -63,10 +60,10 @@
+         }
+     };
+ 
+-    public PocketBrewingStandInventory(ValueInput input) {
++    public PocketBrewingStandInventory(CompoundTag tag) {
+         super(5);
+-        if (input != null)
+-            this.load(input);
++        if (tag != null)
++            this.load(tag);
+     }
+ 
+     public PocketBrewingStandInventory() {
+@@ -83,11 +80,6 @@
+         return this.items.size();
+     }
+ 
+-    @Override
+-    public @NotNull NonNullList<ItemStack> getItems() {
+-        return this.items;
+-    }
+-
+     public void tick(Level level) {
+         ItemStack itemStack = this.items.get(4);
+         if (this.fuel <= 0 && itemStack.is(Items.BLAZE_POWDER)) {
+@@ -96,14 +88,14 @@
+             setChanged();
+         }
+ 
+-        boolean bl = isBrewable(level.potionBrewing(), this.items);
++        boolean bl = isBrewable(this.items);
+         boolean bl2 = this.brewTime > 0;
+         ItemStack itemStack2 = this.items.get(3);
+         if (bl2) {
+             this.brewTime--;
+             boolean bl3 = this.brewTime == 0;
+             if (bl3 && bl) {
+-                doBrew(level, this.items);
++                doBrew(this.items);
+             } else if (!bl || !itemStack2.is(this.ingredient)) {
+                 this.brewTime = 0;
+             }
+@@ -134,16 +126,16 @@
+         return bls;
+     }
+ 
+-    private static boolean isBrewable(PotionBrewing potionBrewing, NonNullList<ItemStack> nonNullList) {
++    private static boolean isBrewable(NonNullList<ItemStack> nonNullList) {
+         ItemStack itemStack = nonNullList.get(3);
+         if (itemStack.isEmpty()) {
+             return false;
+-        } else if (!potionBrewing.isIngredient(itemStack)) {
++        } else if (!PotionBrewing.isIngredient(itemStack)) {
+             return false;
+         } else {
+             for (int i = 0; i < 3; i++) {
+                 ItemStack itemStack2 = nonNullList.get(i);
+-                if (!itemStack2.isEmpty() && potionBrewing.hasMix(itemStack2, itemStack)) {
++                if (!itemStack2.isEmpty() && PotionBrewing.hasMix(itemStack2, itemStack)) {
+                     return true;
+                 }
+             }
+@@ -152,19 +144,18 @@
+         }
+     }
+ 
+-    private static void doBrew(Level level, NonNullList<ItemStack> nonNullList) {
++    private static void doBrew(NonNullList<ItemStack> nonNullList) {
+         ItemStack itemStack = nonNullList.get(3);
+-        PotionBrewing potionBrewing = level.potionBrewing();
+ 
+         for (int i = 0; i < 3; i++) {
+-            nonNullList.set(i, potionBrewing.mix(itemStack, nonNullList.get(i)));
++            nonNullList.set(i, PotionBrewing.mix(itemStack, nonNullList.get(i)));
+         }
+ 
+         itemStack.shrink(1);
+-        ItemStack lv3 = itemStack.getItem().getCraftingRemainder();
+-        if (!lv3.isEmpty()) {
++        if (itemStack.getItem().hasCraftingRemainingItem()) {
++            ItemStack itemStack2 = new ItemStack(itemStack.getItem().getCraftingRemainingItem());
+             if (itemStack.isEmpty()) {
+-                itemStack = lv3;
++                itemStack = itemStack2;
+             }
+         }
+ 
+@@ -172,18 +163,18 @@
+     }
+ 
+ 
+-    public void load(ValueInput compoundTag) {
++    public void load(CompoundTag compoundTag) {
+         this.items.clear();
+         ContainerHelper.loadAllItems(compoundTag, this.items);
+-        this.brewTime = compoundTag.getShortOr("BrewTime", (short) 0);
++        this.brewTime = compoundTag.getShort("BrewTime");
+         if (this.brewTime > 0) {
+             this.ingredient = this.items.get(3).getItem();
+         }
+ 
+-        this.fuel = compoundTag.getByteOr("Fuel", (byte) 0);
++        this.fuel = compoundTag.getByte("Fuel");
+     }
+ 
+-    public void save(@NotNull ValueOutput compoundTag) {
++    public void save(@NotNull CompoundTag compoundTag) {
+         compoundTag.putShort("BrewTime", (short)this.brewTime);
+         ContainerHelper.saveAllItems(compoundTag, this.items);
+         compoundTag.putByte("Fuel", (byte)this.fuel);
+@@ -224,8 +215,7 @@
+     @Override
+     public boolean canPlaceItem(int i, @NotNull ItemStack itemStack) {
+         if (i == 3) {
+-            PotionBrewing potionBrewing = PersistedMachines.hasLevel() ? PersistedMachines.getLevel().potionBrewing() : PotionBrewing.EMPTY;
+-            return potionBrewing.isIngredient(itemStack);
++            return PotionBrewing.isIngredient(itemStack);
+         } else {
+             return i == 4
+                     ? itemStack.is(Items.BLAZE_POWDER)
