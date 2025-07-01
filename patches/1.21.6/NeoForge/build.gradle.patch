@@ -1,0 +1,13 @@
+--- a/NeoForge/build.gradle
++++ b/NeoForge/build.gradle
+@@ -53,8 +53,8 @@
+     setVersionType("release")
+     setChangelog("https://raw.githubusercontent.com/hypherionmc/changelogs/refs/heads/main/pocketmachines.md")
+     setProjectVersion("${minecraft_version}-${project.version}")
+-    setDisplayName("[NeoForge 1.21.6] Simple Pocket Machines - ${project.version}")
+-    setGameVersions("1.21.6")
++    setDisplayName("[NeoForge 1.21.6/7] Simple Pocket Machines - ${project.version}")
++    setGameVersions("1.21.6", "1.21.7")
+     setLoaders("neoforge")
+     setArtifact(remapJar)
+     setCurseEnvironment("both")
