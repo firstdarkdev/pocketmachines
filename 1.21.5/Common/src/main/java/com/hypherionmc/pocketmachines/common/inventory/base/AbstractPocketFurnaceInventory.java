@@ -3,6 +3,7 @@ package com.hypherionmc.pocketmachines.common.inventory.base;
 import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
 import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
+import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -167,7 +168,10 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
                 this.litDuration = this.litTime;
                 if (this.isLit()) {
                     isDirty = true;
-                    if (hasFuel) {
+                    ItemStack remainder = PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack);
+                    if (!remainder.isEmpty()) {
+                        this.items.set(1, remainder);
+                    } else if (hasFuel) {
                         Item lv5 = itemStack.getItem();
                         itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
@@ -230,7 +234,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
             if (itemStack3.isEmpty()) {
                 nonNullList.set(2, itemStack2.copy());
             } else if (ItemStack.isSameItemSameComponents(itemStack3, itemStack2)) {
-                itemStack3.grow(1);
+                itemStack3.grow(itemStack2.getCount());
             }
 
             if (itemStack.is(Blocks.WET_SPONGE.asItem()) && !nonNullList.get(1).isEmpty() && nonNullList.get(1).is(Items.BUCKET)) {
@@ -252,7 +256,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
     }
 
     protected int getBurnDuration(FuelValues fuelValues, ItemStack itemStack) {
-        return fuelValues.burnDuration(itemStack);
+        return PocketMachinesHelper.INSTANCE.getItemBurnDuration(fuelValues, itemStack, recipeType);
     }
 
     private int getTotalCookTime(ServerLevel level, ItemStack stack) {

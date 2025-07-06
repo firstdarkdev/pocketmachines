@@ -1,9 +1,9 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
-@@ -3,22 +3,15 @@
- import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
+@@ -4,22 +4,15 @@
  import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
  import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
+ import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 -import com.mojang.serialization.Codec;
 +import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
  import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -25,7 +25,7 @@
  import net.minecraft.world.entity.player.Inventory;
  import net.minecraft.world.entity.player.Player;
  import net.minecraft.world.inventory.AbstractContainerMenu;
-@@ -26,26 +19,25 @@
+@@ -27,26 +20,25 @@
  import net.minecraft.world.item.Item;
  import net.minecraft.world.item.ItemStack;
  import net.minecraft.world.item.Items;
@@ -59,7 +59,7 @@
  
      public final ContainerData containerData = new ContainerData() {
          @Override
-@@ -83,19 +75,15 @@
+@@ -84,19 +76,15 @@
          }
      };
  
@@ -82,7 +82,7 @@
      }
  
      @Nullable
-@@ -112,108 +100,111 @@
+@@ -113,111 +101,113 @@
          return this.name;
      }
  
@@ -169,16 +169,21 @@
                  this.litDuration = this.litTime;
                  if (this.isLit()) {
 -                    isDirty = true;
--                    if (hasFuel) {
+-                    ItemStack remainder = PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack);
+-                    if (!remainder.isEmpty()) {
+-                        this.items.set(1, remainder);
+-                    } else if (hasFuel) {
 -                        Item lv5 = itemStack.getItem();
 +                    bl2 = true;
-+                    if (bl4) {
-+                        Item item = itemStack.getItem();
++                    ItemStack remaining = PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack);
++
++                    if (!remaining.isEmpty()) {
++                        this.items.set(1, remaining);
++                    } else if (bl4) {
                          itemStack.shrink(1);
                          if (itemStack.isEmpty()) {
 -                            this.items.set(1, lv5.getCraftingRemainder());
-+                            Item item2 = item.getCraftingRemainingItem();
-+                            this.items.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
++                            this.items.set(1, PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack));
                          }
                      }
                  }
@@ -234,7 +239,7 @@
                      return false;
                  } else {
                      return itemStack2.getCount() < i && itemStack2.getCount() < itemStack2.getMaxStackSize() || itemStack2.getCount() < itemStack.getMaxStackSize();
-@@ -224,14 +215,14 @@
+@@ -228,14 +218,14 @@
          }
      }
  
@@ -250,10 +255,10 @@
                  nonNullList.set(2, itemStack2.copy());
 -            } else if (ItemStack.isSameItemSameComponents(itemStack3, itemStack2)) {
 +            } else if (ItemStack.isSameItem(itemStack3, itemStack2)) {
-                 itemStack3.grow(1);
+                 itemStack3.grow(itemStack2.getCount());
              }
  
-@@ -246,21 +237,21 @@
+@@ -250,21 +240,21 @@
          }
      }
  
@@ -267,7 +272,7 @@
      }
  
 -    protected int getBurnDuration(FuelValues fuelValues, ItemStack itemStack) {
--        return fuelValues.burnDuration(itemStack);
+-        return PocketMachinesHelper.INSTANCE.getItemBurnDuration(fuelValues, itemStack, recipeType);
 +    protected int getBurnDuration(ItemStack itemStack) {
 +        return PocketMachinesHelper.INSTANCE.getBurnTime(itemStack, this.recipeType);
      }
@@ -283,7 +288,7 @@
                  .orElse(200);
      }
  
-@@ -304,9 +295,11 @@
+@@ -308,9 +298,11 @@
      @Override
      public void setItem(int i, ItemStack itemStack) {
          ItemStack itemStack2 = this.items.get(i);
@@ -297,7 +302,7 @@
  
          if (i == 0 && !bl) {
              this.cookingTotalTime = PersistedMachines.getLevel() != null ? this.getTotalCookTime(PersistedMachines.getLevel(), itemStack) : 200;
-@@ -328,7 +321,7 @@
+@@ -332,7 +324,7 @@
              return true;
          } else {
              ItemStack itemStack2 = this.items.get(1);

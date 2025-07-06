@@ -2,6 +2,7 @@ package com.hypherionmc.pocketmachines.platform;
 
 import com.google.auto.service.AutoService;
 import com.hypherionmc.pocketmachines.mixin.accessor.MenuTypeAccess;
+import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,5 +24,11 @@ public class FabricPocketMachinesHelper implements PocketMachinesHelper {
     @Override
     public <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> creator, FeatureFlagSet flags) {
         return MenuTypeAccess.pocketmachines_create(creator::apply, flags);
+    }
+
+    @Override
+    public ItemStack getCraftingRemainder(ItemStack stack) {
+        FabricItem fabricItem = (FabricItem) stack.getItem();
+        return fabricItem.getRecipeRemainder(stack);
     }
 }

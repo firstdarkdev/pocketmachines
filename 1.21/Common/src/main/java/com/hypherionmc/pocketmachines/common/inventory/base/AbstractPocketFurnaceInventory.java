@@ -4,6 +4,7 @@ import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
 import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
 import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
+import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;
@@ -164,12 +165,14 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
                 this.litDuration = this.litTime;
                 if (this.isLit()) {
                     bl2 = true;
-                    if (bl4) {
-                        Item item = itemStack.getItem();
+                    ItemStack remaining = PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack);
+
+                    if (!remaining.isEmpty()) {
+                        this.items.set(1, remaining);
+                    } else if (bl4) {
                         itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
-                            Item item2 = item.getCraftingRemainingItem();
-                            this.items.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
+                            this.items.set(1, PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack));
                         }
                     }
                 }
@@ -230,7 +233,7 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
             if (itemStack3.isEmpty()) {
                 nonNullList.set(2, itemStack2.copy());
             } else if (ItemStack.isSameItemSameComponents(itemStack3, itemStack2)) {
-                itemStack3.grow(1);
+                itemStack3.grow(itemStack2.getCount());
             }
 
             if (itemStack.is(Blocks.WET_SPONGE.asItem()) && !nonNullList.get(1).isEmpty() && nonNullList.get(1).is(Items.BUCKET)) {

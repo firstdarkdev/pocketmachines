@@ -1,22 +1,35 @@
 --- a/NeoForge/src/main/java/com/hypherionmc/pocketmachines/platform/NeoForgePocketMachinesHelper.java
 +++ b/NeoForge/src/main/java/com/hypherionmc/pocketmachines/platform/NeoForgePocketMachinesHelper.java
-@@ -5,11 +5,19 @@
- import net.minecraft.world.flag.FeatureFlagSet;
- import net.minecraft.world.inventory.AbstractContainerMenu;
+@@ -7,7 +7,7 @@
  import net.minecraft.world.inventory.MenuType;
-+import net.minecraft.world.item.ItemStack;
-+import net.minecraft.world.item.crafting.RecipeType;
+ import net.minecraft.world.item.ItemStack;
+ import net.minecraft.world.item.crafting.RecipeType;
+-import net.minecraft.world.level.block.entity.FuelValues;
 +import net.minecraftforge.common.ForgeHooks;
  
  import java.util.function.BiFunction;
  
- @AutoService(PocketMachinesHelper.class)
+@@ -15,17 +15,17 @@
  public class NeoForgePocketMachinesHelper implements PocketMachinesHelper {
-+
-+    @Override
+ 
+     @Override
 +    public int getBurnTime(ItemStack stack, RecipeType type) {
 +        return stack.isEmpty() ? 0 : ForgeHooks.getBurnTime(stack, type);
 +    }
++
++    @Override
+     public <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> creator, FeatureFlagSet flags) {
+         return new MenuType<>(creator::apply, flags);
+     }
  
      @Override
-     public <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> creator, FeatureFlagSet flags) {
+-    public int getItemBurnDuration(FuelValues fuelValues, ItemStack stack, RecipeType<?> recipeType) {
+-        return stack.getBurnTime(recipeType, fuelValues);
+-    }
+-
+-    @Override
+     public ItemStack getCraftingRemainder(ItemStack stack) {
+-        return stack.getItem().getCraftingRemainder(stack);
++        return stack.getItem().getCraftingRemainingItem(stack);
+     }
+ }

@@ -23,4 +23,9 @@ public class NeoForgePocketMachinesHelper implements PocketMachinesHelper {
     public <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> creator, FeatureFlagSet flags) {
         return new MenuType<>(creator::apply, flags);
     }
+
+    @Override
+    public ItemStack getCraftingRemainder(ItemStack stack) {
+        return stack.getItem().getCraftingRemainingItem(stack);
+    }
 }

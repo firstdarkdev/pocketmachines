@@ -16,4 +16,5 @@ public interface PocketMachinesHelper {
     int getBurnTime(ItemStack stack, RecipeType type);
     <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> creator, FeatureFlagSet flags);
 
+    ItemStack getCraftingRemainder(ItemStack stack);
 }
