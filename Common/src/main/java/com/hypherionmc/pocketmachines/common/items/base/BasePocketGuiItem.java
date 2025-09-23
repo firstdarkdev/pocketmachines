@@ -16,7 +16,7 @@ public abstract class BasePocketGuiItem extends Item {
 
     @Override
     public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (!level.isClientSide && !player.isCrouching()) {
+        if (!level.isClientSide() && !player.isCrouching()) {
             this.openMenu(level, player, hand);
         }
 

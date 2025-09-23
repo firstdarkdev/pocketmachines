@@ -32,13 +32,14 @@ public abstract class BasePocketItem<T extends ISaveableContainer> extends Item 
         if (!levelIn.isClientSide() && !playerIn.isCrouching()) {
             ItemStack stack = playerIn.getItemInHand(handIn);
             CustomData tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+            CompoundTag compoundTag = tag.copyTag();
 
-            if (!tag.contains(NBT_KEY)) {
+            if (!compoundTag.contains(NBT_KEY)) {
                 CustomData.update(DataComponents.CUSTOM_DATA, stack, updateTag -> updateTag.putString(NBT_KEY, saveHolder.createInstance(playerIn)));
             }
 
             tag = stack.get(DataComponents.CUSTOM_DATA);
-            CompoundTag compoundTag = tag.copyTag();
+            compoundTag = tag.copyTag();
             openScreen(saveHolder.getInstance(compoundTag.getStringOr(NBT_KEY, NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
         }
 

@@ -22,7 +22,7 @@ public abstract class BaseTickablePocketItem<T extends ISaveableContainer> exten
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, ServerLevel levelIn, @NotNull Entity entityIn, EquipmentSlot slot) {
-        if (!levelIn.isClientSide && entityIn instanceof Player player) {
+        if (!levelIn.isClientSide() && entityIn instanceof Player player) {
             CustomData tag = stack.get(DataComponents.CUSTOM_DATA);
             if (tag == null)
                 return;

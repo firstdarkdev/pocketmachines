@@ -1,6 +1,7 @@
 def projectName = "Simple Pocket Machines";
 def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
-def mcVer = "1.21.6";
+def mcVer = "1.21.9-pre3";
+def supportedMc = "1.21.9-pre3"
 
 pipeline {
     agent {
@@ -44,8 +45,8 @@ pipeline {
                 projectName: "${projectName}",
                 projectIcon: "${projectIcon}",
                 modLoaders: "neoforge|fabric|quilt",
-                minecraftVersions: "1.21.6-rc1",
-                type: "snapshot",
+                minecraftVersions: "${supportedMc}",
+                type: "experimental",
                 dependsOn: "",
                 failWebhook: env.SSS_WEBHOOK,
                 publishWebhooks: "${env.SSS_WEBHOOK}|${env.FDD_WH}"
