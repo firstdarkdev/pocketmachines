@@ -1,12 +1,15 @@
 --- a/build.gradle
 +++ b/build.gradle
-@@ -3,14 +3,14 @@
+@@ -2,15 +2,15 @@
+     id 'java'
      id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.8"
      id "xyz.wagyourtail.unimined" version "1.2.9" apply false
-     id "com.hypherionmc.modutils.orion" version "1.0.22"
+-    id "com.hypherionmc.modutils.orion" version "1.0.22"
 -    id 'com.matyrobbrt.mc.registrationutils' version "1.21.0-0.2.1"
+-    id "com.hypherionmc.modutils.modpublisher" version "2.1.8"
++    id "com.hypherionmc.modutils.orion" version "1.0.28"
 +    id 'com.matyrobbrt.mc.registrationutils' version "1.20.1-2.0.2"
-     id "com.hypherionmc.modutils.modpublisher" version "2.1.8"
++    id "com.hypherionmc.modutils.modpublisher" version "2.1.+"
  }
  
  var relType = project.properties["releaseType"] ?: "${release_type}"
