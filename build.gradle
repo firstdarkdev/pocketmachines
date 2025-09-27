@@ -10,7 +10,7 @@ plugins {
 var relType = project.properties["releaseType"] ?: "${release_type}"
 
 ext {
-    isPort = true //(relType == 'port')
+    isPort = false //(relType == 'port')
 }
 
 orion.setup {
@@ -35,7 +35,7 @@ registrationUtils {
     group 'com.hypherionmc.pocketmachines.reg'
     projects {
         Fabric { type 'Fabric' } // The fabric project
-        //NeoForge { type 'NeoForge' } // The neoforge project
+        NeoForge { type 'NeoForge' } // The neoforge project
         Common { type 'Common' } // The common project
     }
 }
