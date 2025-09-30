@@ -17,7 +17,7 @@
  import net.minecraft.world.level.Level;
  import org.jetbrains.annotations.NotNull;
  
-@@ -21,28 +18,27 @@
+@@ -21,29 +18,27 @@
      private final SaveHolder<T> saveHolder;
      final String NBT_KEY;
  
@@ -35,16 +35,18 @@
          if (!levelIn.isClientSide() && !playerIn.isCrouching()) {
              ItemStack stack = playerIn.getItemInHand(handIn);
 -            CustomData tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+-            CompoundTag compoundTag = tag.copyTag();
 +            CompoundTag tag = stack.getOrCreateTag();
  
-             if (!tag.contains(NBT_KEY)) {
+-            if (!compoundTag.contains(NBT_KEY)) {
 -                CustomData.update(DataComponents.CUSTOM_DATA, stack, updateTag -> updateTag.putString(NBT_KEY, saveHolder.createInstance(playerIn)));
++            if (!tag.contains(NBT_KEY)) {
 +                tag.putString(NBT_KEY, saveHolder.createInstance(playerIn));
 +                stack.setTag(tag);
              }
  
 -            tag = stack.get(DataComponents.CUSTOM_DATA);
--            CompoundTag compoundTag = tag.copyTag();
+-            compoundTag = tag.copyTag();
 -            openScreen(saveHolder.getInstance(compoundTag.getStringOr(NBT_KEY, NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
 +            openScreen(saveHolder.getInstance(tag.getString(NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
          }

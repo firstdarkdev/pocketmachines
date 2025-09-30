@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.hypherionmc.pocketmachines.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "accessor.MenuTypeAccess"
+  ],
+  "client": [
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

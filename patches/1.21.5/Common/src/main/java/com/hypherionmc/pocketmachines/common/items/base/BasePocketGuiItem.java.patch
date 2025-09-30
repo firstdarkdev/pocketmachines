@@ -1,0 +1,11 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BasePocketGuiItem.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BasePocketGuiItem.java
+@@ -16,7 +16,7 @@
+ 
+     @Override
+     public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+-        if (!level.isClientSide() && !player.isCrouching()) {
++        if (!level.isClientSide && !player.isCrouching()) {
+             this.openMenu(level, player, hand);
+         }
+ 

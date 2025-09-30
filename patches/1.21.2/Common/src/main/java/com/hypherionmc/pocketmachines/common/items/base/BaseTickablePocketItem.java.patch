@@ -15,15 +15,17 @@
  import org.jetbrains.annotations.NotNull;
  
  public abstract class BaseTickablePocketItem<T extends ISaveableContainer> extends BasePocketItem<T> {
-@@ -21,7 +20,7 @@
+@@ -21,8 +20,8 @@
      }
  
      @Override
 -    public void inventoryTick(@NotNull ItemStack stack, ServerLevel levelIn, @NotNull Entity entityIn, EquipmentSlot slot) {
+-        if (!levelIn.isClientSide() && entityIn instanceof Player player) {
 +    public void inventoryTick(@NotNull ItemStack stack, Level levelIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
-         if (!levelIn.isClientSide && entityIn instanceof Player player) {
++        if (!levelIn.isClientSide && entityIn instanceof Player player) {
              CustomData tag = stack.get(DataComponents.CUSTOM_DATA);
              if (tag == null)
+                 return;
 @@ -31,10 +30,10 @@
                  return;
  

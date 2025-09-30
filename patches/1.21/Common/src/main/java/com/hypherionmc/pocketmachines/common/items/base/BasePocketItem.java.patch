@@ -11,7 +11,7 @@
  import net.minecraft.world.entity.player.Player;
  import net.minecraft.world.item.Item;
  import net.minecraft.world.item.ItemStack;
-@@ -21,14 +20,14 @@
+@@ -21,29 +20,28 @@
      private final SaveHolder<T> saveHolder;
      final String NBT_KEY;
  
@@ -29,11 +29,17 @@
          if (!levelIn.isClientSide() && !playerIn.isCrouching()) {
              ItemStack stack = playerIn.getItemInHand(handIn);
              CustomData tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-@@ -39,10 +38,10 @@
+-            CompoundTag compoundTag = tag.copyTag();
+ 
+-            if (!compoundTag.contains(NBT_KEY)) {
++            if (!tag.contains(NBT_KEY)) {
+                 CustomData.update(DataComponents.CUSTOM_DATA, stack, updateTag -> updateTag.putString(NBT_KEY, saveHolder.createInstance(playerIn)));
+             }
  
              tag = stack.get(DataComponents.CUSTOM_DATA);
-             CompoundTag compoundTag = tag.copyTag();
+-            compoundTag = tag.copyTag();
 -            openScreen(saveHolder.getInstance(compoundTag.getStringOr(NBT_KEY, NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
++            CompoundTag compoundTag = tag.copyTag();
 +            openScreen(saveHolder.getInstance(compoundTag.getString(NBT_KEY), playerIn).getValue(), levelIn, playerIn, handIn);
          }
  

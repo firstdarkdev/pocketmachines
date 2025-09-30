@@ -1,0 +1,6 @@
+{
+  "parent": "pocketmachines:item/pocket_item",
+  "textures": {
+    "2": "block/smoker_front"
+  }
+}

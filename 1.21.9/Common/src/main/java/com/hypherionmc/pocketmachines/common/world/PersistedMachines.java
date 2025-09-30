@@ -1,0 +1,117 @@
+package com.hypherionmc.pocketmachines.common.world;
+
+import com.hypherionmc.pocketmachines.common.inventory.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.Getter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.ValueInput;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+
+public final class PersistedMachines extends SavedData {
+
+    private static final String NAME = "PocketMachinesData";
+    private static final List<SaveHolder<?>> registeredItems = new ArrayList<>();
+    private static PersistedMachines INSTANCE;
+
+    // Holders
+    public static final SaveHolder<PocketFurnaceInventory> POCKET_FURNACE = register(PocketFurnaceInventory::new, PocketFurnaceInventory::new, "TG_FURNACE");
+    public static final SaveHolder<PocketBlastFurnaceInventory> POCKET_BLAST_FURNACE = register(PocketBlastFurnaceInventory::new, PocketBlastFurnaceInventory::new, "TG_BLAST_FURNACE");
+    public static final SaveHolder<PocketChestInventory> POCKET_CHEST = register(PocketChestInventory::new, PocketChestInventory::new, "TG_CHEST");
+    public static final SaveHolder<PocketBrewingStandInventory> POCKET_BREWING_STAND = register(PocketBrewingStandInventory::new, PocketBrewingStandInventory::new, "TG_BREWING_STAND");
+    public static final SaveHolder<PocketSmokerInventory> POCKET_SMOKER = register(PocketSmokerInventory::new, PocketSmokerInventory::new, "TG_SMOKER");
+
+    // CODEC
+    private static final Codec<ListTag> CODEC = Codec.PASSTHROUGH
+            .comapFlatMap(dynamic -> {
+                        Tag tag = dynamic.convert(NbtOps.INSTANCE).getValue();
+
+                        return tag instanceof ListTag listTag
+                                ? DataResult.success(listTag == dynamic.getValue() ? listTag.copy() : listTag)
+                                : DataResult.error(() -> "Not a list tag: " + tag);
+                    },
+                    tag -> new Dynamic(NbtOps.INSTANCE, tag));
+
+    public static final SavedDataType<PersistedMachines> TYPE = new SavedDataType<>(
+            NAME,
+            PersistedMachines::new,
+            context -> RecordCodecBuilder.create(oInstance -> oInstance.group(
+                    RecordCodecBuilder.point(context.levelOrThrow()),
+                    CODEC.fieldOf(POCKET_FURNACE.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_FURNACE)),
+                    CODEC.fieldOf(POCKET_BLAST_FURNACE.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_BLAST_FURNACE)),
+                    CODEC.fieldOf(POCKET_CHEST.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_CHEST)),
+                    CODEC.fieldOf(POCKET_BREWING_STAND.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_BREWING_STAND)),
+                    CODEC.fieldOf(POCKET_SMOKER.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_SMOKER))
+            ).apply(oInstance, PersistedMachines::new)),
+            null
+    );
+
+    @Getter
+    private static ServerLevel level;
+
+    public PersistedMachines(Context ctx) {
+        this(ctx.levelOrThrow(), new ListTag(), new ListTag(), new ListTag(), new ListTag(), new ListTag());
+    }
+
+    public PersistedMachines(ServerLevel serverLevel, ListTag furnaceTag, ListTag blastFurnaceTag, ListTag chestTag, ListTag brewingTag, ListTag smokerTag) {
+        PersistedMachines.level = serverLevel;
+        read(POCKET_FURNACE, furnaceTag);
+        read(POCKET_BLAST_FURNACE, blastFurnaceTag);
+        read(POCKET_CHEST, chestTag);
+        read(POCKET_BREWING_STAND, brewingTag);
+        read(POCKET_SMOKER, smokerTag);
+    }
+
+    public static void resetAll() {
+        registeredItems.forEach(SaveHolder::clear);
+        INSTANCE = null;
+    }
+
+    public static void setInstance(ServerLevel level) {
+        if (level == null) return;
+
+        DimensionDataStorage dimensionDataStorage = level.getDataStorage();
+        INSTANCE = dimensionDataStorage.computeIfAbsent(TYPE);
+        PersistedMachines.level = level;
+    }
+
+    public static boolean hasLevel() {
+        return level != null;
+    }
+
+    static ListTag saveData(SaveHolder<?> holder) {
+        return holder.write(level.registryAccess());
+    }
+
+    void read(SaveHolder<?> holder, ListTag tag) {
+        holder.read(tag, level.registryAccess());
+    }
+
+    private static <T extends ISaveableContainer> SaveHolder<T> register(Supplier<T> constuctor, Function<ValueInput, T> deserializer, String tag) {
+        SaveHolder<T> holder = new SaveHolder<>(constuctor, deserializer, tag);
+        registeredItems.add(holder);
+        return holder;
+    }
+
+    public static void markDirty() {
+        if (INSTANCE != null)
+            INSTANCE.setDirty();
+    }
+
+}

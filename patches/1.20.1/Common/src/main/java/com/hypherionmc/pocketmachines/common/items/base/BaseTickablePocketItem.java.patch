@@ -27,9 +27,10 @@
  
      @Override
 -    public void inventoryTick(@NotNull ItemStack stack, ServerLevel levelIn, @NotNull Entity entityIn, EquipmentSlot slot) {
-+    public void inventoryTick(@NotNull ItemStack stack, Level levelIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
-         if (!levelIn.isClientSide && entityIn instanceof Player player) {
+-        if (!levelIn.isClientSide() && entityIn instanceof Player player) {
 -            CustomData tag = stack.get(DataComponents.CUSTOM_DATA);
++    public void inventoryTick(@NotNull ItemStack stack, Level levelIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
++        if (!levelIn.isClientSide && entityIn instanceof Player player) {
 +            CompoundTag tag = stack.getTag();
 +
              if (tag == null)

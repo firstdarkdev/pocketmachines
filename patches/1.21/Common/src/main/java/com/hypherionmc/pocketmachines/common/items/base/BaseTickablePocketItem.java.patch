@@ -1,6 +1,6 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BaseTickablePocketItem.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/items/base/BaseTickablePocketItem.java
-@@ -4,24 +4,21 @@
+@@ -4,25 +4,22 @@
  import com.hypherionmc.pocketmachines.common.world.SaveHolder;
  import net.minecraft.core.component.DataComponents;
  import net.minecraft.nbt.CompoundTag;
@@ -25,10 +25,12 @@
  
      @Override
 -    public void inventoryTick(@NotNull ItemStack stack, ServerLevel levelIn, @NotNull Entity entityIn, EquipmentSlot slot) {
+-        if (!levelIn.isClientSide() && entityIn instanceof Player player) {
 +    public void inventoryTick(@NotNull ItemStack stack, Level levelIn, @NotNull Entity entityIn, int itemSlot, boolean isSelected) {
-         if (!levelIn.isClientSide && entityIn instanceof Player player) {
++        if (!levelIn.isClientSide && entityIn instanceof Player player) {
              CustomData tag = stack.get(DataComponents.CUSTOM_DATA);
              if (tag == null)
+                 return;
 @@ -31,10 +28,10 @@
                  return;
  
