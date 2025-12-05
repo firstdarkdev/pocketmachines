@@ -1,7 +1,7 @@
 def projectName = "Simple Pocket Machines";
 def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
-def mcVer = "1.21.9-pre3";
-def supportedMc = "1.21.9-pre3"
+def mcVer = "1.21.11-rc2";
+def supportedMc = "1.21.11-rc2"
 
 pipeline {
     agent {
@@ -44,7 +44,7 @@ pipeline {
                 projectSlug: "pocketmachines",
                 projectName: "${projectName}",
                 projectIcon: "${projectIcon}",
-                modLoaders: "neoforge|fabric|quilt",
+                modLoaders: "fabric|quilt",
                 minecraftVersions: "${supportedMc}",
                 type: "experimental",
                 dependsOn: "",

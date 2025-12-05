@@ -6,8 +6,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -19,10 +17,8 @@ import net.minecraft.world.level.storage.ValueInput;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
 
 public final class PersistedMachines extends SavedData {
 
@@ -51,8 +47,7 @@ public final class PersistedMachines extends SavedData {
     public static final SavedDataType<PersistedMachines> TYPE = new SavedDataType<>(
             NAME,
             PersistedMachines::new,
-            context -> RecordCodecBuilder.create(oInstance -> oInstance.group(
-                    RecordCodecBuilder.point(context.levelOrThrow()),
+            RecordCodecBuilder.create(oInstance -> oInstance.group(
                     CODEC.fieldOf(POCKET_FURNACE.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_FURNACE)),
                     CODEC.fieldOf(POCKET_BLAST_FURNACE.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_BLAST_FURNACE)),
                     CODEC.fieldOf(POCKET_CHEST.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_CHEST)),
@@ -65,12 +60,9 @@ public final class PersistedMachines extends SavedData {
     @Getter
     private static ServerLevel level;
 
-    public PersistedMachines(Context ctx) {
-        this(ctx.levelOrThrow(), new ListTag(), new ListTag(), new ListTag(), new ListTag(), new ListTag());
-    }
+    public PersistedMachines() {}
 
-    public PersistedMachines(ServerLevel serverLevel, ListTag furnaceTag, ListTag blastFurnaceTag, ListTag chestTag, ListTag brewingTag, ListTag smokerTag) {
-        PersistedMachines.level = serverLevel;
+    public PersistedMachines(ListTag furnaceTag, ListTag blastFurnaceTag, ListTag chestTag, ListTag brewingTag, ListTag smokerTag) {
         read(POCKET_FURNACE, furnaceTag);
         read(POCKET_BLAST_FURNACE, blastFurnaceTag);
         read(POCKET_CHEST, chestTag);
