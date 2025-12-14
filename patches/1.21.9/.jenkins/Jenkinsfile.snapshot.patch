@@ -1,12 +1,15 @@
 --- a/.jenkins/Jenkinsfile.snapshot
 +++ b/.jenkins/Jenkinsfile.snapshot
-@@ -1,26 +1,26 @@
+@@ -1,26 +1,29 @@
  def projectName = "Simple Pocket Machines";
  def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
--def mcVer = "1.21.9-pre3";
--def supportedMc = "1.21.9-pre3"
-+def mcVer = "1.21.9";
+-def mcVer = "1.21.11";
+-def supportedMc = "1.21.11"
++def JDK = "21";
++def majorMc = "1.21.9";
++def modLoaders = "neoforge|fabric|quilt";
 +def supportedMc = "1.21.9"
++def reltype = "snapshot";
  
  pipeline {
      agent {
@@ -36,7 +39,7 @@
                          link: env.BUILD_URL,
                          result: 'SUCCESS',
                          description: "Build: [${BUILD_NUMBER}](${env.BUILD_URL})"
-@@ -29,29 +29,33 @@
+@@ -29,29 +32,33 @@
  
          stage("Build") {
              steps {
@@ -62,7 +65,7 @@
                  projectSlug: "pocketmachines",
                  projectName: "${projectName}",
                  projectIcon: "${projectIcon}",
--                modLoaders: "neoforge|fabric|quilt",
+-                modLoaders: "fabric|quilt",
 +                modLoaders: "${modLoaders}",
                  minecraftVersions: "${supportedMc}",
 -                type: "experimental",

@@ -1,0 +1,48 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
+@@ -6,6 +6,8 @@
+ import com.mojang.serialization.Dynamic;
+ import com.mojang.serialization.codecs.RecordCodecBuilder;
+ import lombok.Getter;
++import net.minecraft.core.HolderLookup;
++import net.minecraft.nbt.CompoundTag;
+ import net.minecraft.nbt.ListTag;
+ import net.minecraft.nbt.NbtOps;
+ import net.minecraft.nbt.Tag;
+@@ -17,9 +19,11 @@
+ 
+ import java.util.ArrayList;
+ import java.util.List;
++import java.util.function.BiFunction;
+ import java.util.function.Function;
+ import java.util.function.Supplier;
+ 
++
+ public final class PersistedMachines extends SavedData {
+ 
+     private static final String NAME = "PocketMachinesData";
+@@ -47,7 +51,8 @@
+     public static final SavedDataType<PersistedMachines> TYPE = new SavedDataType<>(
+             NAME,
+             PersistedMachines::new,
+-            RecordCodecBuilder.create(oInstance -> oInstance.group(
++            context -> RecordCodecBuilder.create(oInstance -> oInstance.group(
++                    RecordCodecBuilder.point(context.levelOrThrow()),
+                     CODEC.fieldOf(POCKET_FURNACE.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_FURNACE)),
+                     CODEC.fieldOf(POCKET_BLAST_FURNACE.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_BLAST_FURNACE)),
+                     CODEC.fieldOf(POCKET_CHEST.getNBT_TAG_KEY()).forGetter(data -> saveData(POCKET_CHEST)),
+@@ -60,9 +65,12 @@
+     @Getter
+     private static ServerLevel level;
+ 
+-    public PersistedMachines() {}
++    public PersistedMachines(Context ctx) {
++        this(ctx.levelOrThrow(), new ListTag(), new ListTag(), new ListTag(), new ListTag(), new ListTag());
++    }
+ 
+-    public PersistedMachines(ListTag furnaceTag, ListTag blastFurnaceTag, ListTag chestTag, ListTag brewingTag, ListTag smokerTag) {
++    public PersistedMachines(ServerLevel serverLevel, ListTag furnaceTag, ListTag blastFurnaceTag, ListTag chestTag, ListTag brewingTag, ListTag smokerTag) {
++        PersistedMachines.level = serverLevel;
+         read(POCKET_FURNACE, furnaceTag);
+         read(POCKET_BLAST_FURNACE, blastFurnaceTag);
+         read(POCKET_CHEST, chestTag);

@@ -1,27 +1,27 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
-@@ -4,17 +4,16 @@
+@@ -4,13 +4,16 @@
  import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
  import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
  import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 -import com.mojang.serialization.Codec;
-+import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
- import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 -import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
++import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
++import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 +import lombok.Getter;
 +import lombok.Setter;
- import net.minecraft.core.HolderLookup;
++import net.minecraft.core.HolderLookup;
  import net.minecraft.core.NonNullList;
  import net.minecraft.core.RegistryAccess;
- import net.minecraft.nbt.CompoundTag;
++import net.minecraft.nbt.CompoundTag;
  import net.minecraft.network.chat.Component;
 -import net.minecraft.resources.ResourceKey;
- import net.minecraft.resources.ResourceLocation;
 -import net.minecraft.server.level.ServerLevel;
++import net.minecraft.resources.ResourceLocation;
  import net.minecraft.util.Mth;
  import net.minecraft.world.ContainerHelper;
  import net.minecraft.world.ContainerListener;
-@@ -28,22 +27,18 @@
+@@ -24,22 +27,18 @@
  import net.minecraft.world.item.ItemStack;
  import net.minecraft.world.item.Items;
  import net.minecraft.world.item.crafting.*;
@@ -46,7 +46,7 @@
      protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
      private int litTime, litDuration, cookingProgress, cookingTotalTime;
      private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> quickCheck;
-@@ -84,19 +79,19 @@
+@@ -80,19 +79,19 @@
          }
      };
  
@@ -70,7 +70,7 @@
      }
  
      @Nullable
-@@ -113,104 +108,106 @@
+@@ -109,104 +108,106 @@
          return this.name;
      }
  
@@ -221,7 +221,7 @@
              if (itemStack.isEmpty()) {
                  return false;
              } else {
-@@ -228,10 +225,10 @@
+@@ -224,10 +225,10 @@
          }
      }
  
@@ -235,7 +235,7 @@
              ItemStack itemStack3 = nonNullList.get(2);
              if (itemStack3.isEmpty()) {
                  nonNullList.set(2, itemStack2.copy());
-@@ -252,19 +249,20 @@
+@@ -248,19 +249,20 @@
  
      public void setRecipeUsed(@Nullable RecipeHolder<?> recipeHolder) {
          if (recipeHolder != null) {
@@ -261,7 +261,7 @@
                  .orElse(200);
      }
  
-@@ -332,7 +330,7 @@
+@@ -328,7 +330,7 @@
              return true;
          } else {
              ItemStack itemStack2 = this.items.get(1);

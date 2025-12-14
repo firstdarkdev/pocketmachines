@@ -3,8 +3,8 @@
 @@ -1,26 +1,29 @@
  def projectName = "Simple Pocket Machines";
  def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
--def mcVer = "1.21.9-pre3";
--def supportedMc = "1.21.9-pre3"
+-def mcVer = "1.21.11";
+-def supportedMc = "1.21.11"
 +def JDK = "21";
 +def majorMc = "1.21.5";
 +def modLoaders = "neoforge|fabric|quilt";
@@ -65,7 +65,7 @@
                  projectSlug: "pocketmachines",
                  projectName: "${projectName}",
                  projectIcon: "${projectIcon}",
--                modLoaders: "neoforge|fabric|quilt",
+-                modLoaders: "fabric|quilt",
 +                modLoaders: "${modLoaders}",
                  minecraftVersions: "${supportedMc}",
 -                type: "experimental",

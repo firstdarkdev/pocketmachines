@@ -1,0 +1,19 @@
+{
+  "model": {
+    "type": "select",
+    "property": "custom_model_data",
+    "fallback": {
+      "type": "model",
+      "model": "pocketmachines:item/pocket_blast_furnace"
+    },
+    "cases": [
+      {
+        "when": "lit",
+        "model": {
+          "type": "model",
+          "model": "pocketmachines:item/pocket_blast_furnace_lit"
+        }
+      }
+    ]
+  }
+}

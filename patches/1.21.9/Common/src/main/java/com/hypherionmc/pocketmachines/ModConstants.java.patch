@@ -1,0 +1,20 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/ModConstants.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/ModConstants.java
+@@ -2,7 +2,7 @@
+ 
+ import net.minecraft.core.registries.Registries;
+ import net.minecraft.resources.ResourceKey;
+-import net.minecraft.resources.Identifier;
++import net.minecraft.resources.ResourceLocation;
+ import net.minecraft.world.item.Item;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+@@ -13,7 +13,7 @@
+     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+ 
+     public static ResourceKey<Item> makeResourceKey(String name) {
+-        return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(MOD_ID, name));
++        return ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MOD_ID, name));
+     }
+ 
+ }

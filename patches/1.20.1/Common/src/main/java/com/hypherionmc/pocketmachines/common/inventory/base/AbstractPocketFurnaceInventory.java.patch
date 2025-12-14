@@ -1,21 +1,20 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
-@@ -4,22 +4,15 @@
+@@ -4,18 +4,15 @@
  import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
  import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
  import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 -import com.mojang.serialization.Codec;
-+import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
- import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 -import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
--import net.minecraft.core.HolderLookup;
++import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
++import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
  import net.minecraft.core.NonNullList;
  import net.minecraft.core.RegistryAccess;
- import net.minecraft.nbt.CompoundTag;
++import net.minecraft.nbt.CompoundTag;
  import net.minecraft.network.chat.Component;
 -import net.minecraft.resources.ResourceKey;
- import net.minecraft.resources.ResourceLocation;
 -import net.minecraft.server.level.ServerLevel;
++import net.minecraft.resources.ResourceLocation;
  import net.minecraft.util.Mth;
 -import net.minecraft.world.ContainerHelper;
 -import net.minecraft.world.ContainerListener;
@@ -25,7 +24,7 @@
  import net.minecraft.world.entity.player.Inventory;
  import net.minecraft.world.entity.player.Player;
  import net.minecraft.world.inventory.AbstractContainerMenu;
-@@ -27,26 +20,25 @@
+@@ -23,26 +20,25 @@
  import net.minecraft.world.item.Item;
  import net.minecraft.world.item.ItemStack;
  import net.minecraft.world.item.Items;
@@ -59,7 +58,7 @@
  
      public final ContainerData containerData = new ContainerData() {
          @Override
-@@ -84,19 +76,15 @@
+@@ -80,19 +76,15 @@
          }
      };
  
@@ -82,7 +81,7 @@
      }
  
      @Nullable
-@@ -113,111 +101,113 @@
+@@ -109,111 +101,113 @@
          return this.name;
      }
  
@@ -239,7 +238,7 @@
                      return false;
                  } else {
                      return itemStack2.getCount() < i && itemStack2.getCount() < itemStack2.getMaxStackSize() || itemStack2.getCount() < itemStack.getMaxStackSize();
-@@ -228,14 +218,14 @@
+@@ -224,14 +218,14 @@
          }
      }
  
@@ -258,7 +257,7 @@
                  itemStack3.grow(itemStack2.getCount());
              }
  
-@@ -250,21 +240,21 @@
+@@ -246,21 +240,21 @@
          }
      }
  
@@ -288,7 +287,7 @@
                  .orElse(200);
      }
  
-@@ -308,9 +298,11 @@
+@@ -304,9 +298,11 @@
      @Override
      public void setItem(int i, ItemStack itemStack) {
          ItemStack itemStack2 = this.items.get(i);
@@ -302,7 +301,7 @@
  
          if (i == 0 && !bl) {
              this.cookingTotalTime = PersistedMachines.getLevel() != null ? this.getTotalCookTime(PersistedMachines.getLevel(), itemStack) : 200;
-@@ -332,7 +324,7 @@
+@@ -328,7 +324,7 @@
              return true;
          } else {
              ItemStack itemStack2 = this.items.get(1);

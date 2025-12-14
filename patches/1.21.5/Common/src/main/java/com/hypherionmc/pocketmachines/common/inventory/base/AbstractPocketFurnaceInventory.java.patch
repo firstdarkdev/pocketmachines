@@ -1,22 +1,23 @@
 --- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
 +++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/inventory/base/AbstractPocketFurnaceInventory.java
-@@ -4,15 +4,12 @@
+@@ -4,12 +4,13 @@
  import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
  import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
  import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 -import com.mojang.serialization.Codec;
- import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 -import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
- import net.minecraft.core.HolderLookup;
++import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
++import net.minecraft.core.HolderLookup;
  import net.minecraft.core.NonNullList;
  import net.minecraft.core.RegistryAccess;
- import net.minecraft.nbt.CompoundTag;
++import net.minecraft.nbt.CompoundTag;
  import net.minecraft.network.chat.Component;
 -import net.minecraft.resources.ResourceKey;
- import net.minecraft.resources.ResourceLocation;
++import net.minecraft.resources.ResourceLocation;
  import net.minecraft.server.level.ServerLevel;
  import net.minecraft.util.Mth;
-@@ -30,20 +27,16 @@
+ import net.minecraft.world.ContainerHelper;
+@@ -26,20 +27,16 @@
  import net.minecraft.world.item.crafting.*;
  import net.minecraft.world.level.block.Blocks;
  import net.minecraft.world.level.block.entity.FuelValues;
@@ -38,7 +39,7 @@
      protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
      private int litTime, litDuration, cookingProgress, cookingTotalTime;
      private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> quickCheck;
-@@ -84,19 +77,19 @@
+@@ -80,19 +77,19 @@
          }
      };
  
@@ -62,7 +63,7 @@
      }
  
      @Nullable
-@@ -113,23 +106,28 @@
+@@ -109,23 +106,28 @@
          return this.name;
      }
  
@@ -98,7 +99,7 @@
      }
  
      public boolean isLit() {
-@@ -252,7 +250,8 @@
+@@ -248,7 +250,8 @@
  
      public void setRecipeUsed(@Nullable RecipeHolder<?> recipeHolder) {
          if (recipeHolder != null) {
