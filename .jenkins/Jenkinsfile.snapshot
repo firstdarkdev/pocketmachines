@@ -1,7 +1,7 @@
 def projectName = "Simple Pocket Machines";
 def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
-def mcVer = "1.21.11-rc2";
-def supportedMc = "1.21.11-rc2"
+def mcVer = "1.21.11";
+def supportedMc = "1.21.11"
 
 pipeline {
     agent {
