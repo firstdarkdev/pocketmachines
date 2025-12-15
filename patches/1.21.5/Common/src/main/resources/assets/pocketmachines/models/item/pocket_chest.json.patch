@@ -1,0 +1,10 @@
+--- a/Common/src/main/resources/assets/pocketmachines/models/item/pocket_chest.json
++++ b/Common/src/main/resources/assets/pocketmachines/models/item/pocket_chest.json
+@@ -1,6 +1,6 @@
+ {
+   "parent": "pocketmachines:item/pocket_item",
+   "textures": {
+-    "2": "pocketmachines:block/chest_item"
++    "2": "pocketmachines:item/chest_item"
+   }
+ }

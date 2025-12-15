@@ -1,0 +1,10 @@
+--- a/Common/src/main/resources/assets/pocketmachines/models/item/pocket_stonecutter.json
++++ b/Common/src/main/resources/assets/pocketmachines/models/item/pocket_stonecutter.json
+@@ -1,6 +1,6 @@
+ {
+   "parent": "pocketmachines:item/pocket_item",
+   "textures": {
+-    "2": "pocketmachines:block/stonecutter_item"
++    "2": "pocketmachines:item/stonecutter_item"
+   }
+ }

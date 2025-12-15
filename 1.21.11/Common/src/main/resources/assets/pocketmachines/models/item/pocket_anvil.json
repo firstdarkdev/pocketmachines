@@ -1,6 +1,6 @@
 {
   "parent": "pocketmachines:item/pocket_item",
   "textures": {
-    "2": "pocketmachines:item/anvil_item"
+    "2": "pocketmachines:block/anvil_item"
   }
 }

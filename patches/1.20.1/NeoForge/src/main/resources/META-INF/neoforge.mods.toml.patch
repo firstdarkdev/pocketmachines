@@ -1,6 +1,6 @@
 --- a/NeoForge/src/main/resources/META-INF/neoforge.mods.toml
 +++ /dev/null
-@@ -1,29 +1,0 @@
+@@ -1,32 +1,0 @@
 -modLoader="javafml"
 -loaderVersion="[1,)"
 -license="MIT"
@@ -16,6 +16,9 @@
 -#credits=""
 -authors="${mod_author}"
 -description='''Simple, portable vanilla machines'''
+-
+-[[mixins]]
+-config="${mod_id}.mixins.json"
 -
 -[[dependencies.${mod_id}]]
 -modId="neoforge"

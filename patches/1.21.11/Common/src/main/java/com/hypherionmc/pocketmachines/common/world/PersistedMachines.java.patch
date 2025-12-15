@@ -1,0 +1,13 @@
+--- a/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
++++ b/Common/src/main/java/com/hypherionmc/pocketmachines/common/world/PersistedMachines.java
+@@ -78,9 +78,9 @@
+     public static void setInstance(ServerLevel level) {
+         if (level == null) return;
+ 
++        PersistedMachines.level = level;
+         DimensionDataStorage dimensionDataStorage = level.getDataStorage();
+         INSTANCE = dimensionDataStorage.computeIfAbsent(TYPE);
+-        PersistedMachines.level = level;
+     }
+ 
+     public static boolean hasLevel() {
