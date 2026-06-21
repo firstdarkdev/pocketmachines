@@ -26,7 +26,7 @@ pipeline {
         }
         stage("Prepare") {
             steps {
-                dir("${WORKSPACE}/${majorMc}") {
+                dir("${WORKSPACE}/versions/${majorMc}") {
                     sh "chmod +x ./gradlew"
                     sh "./gradlew clean"
                 }
@@ -34,7 +34,7 @@ pipeline {
         }
         stage("Publish to Modrinth/Curseforge") {
             steps {
-                dir("${WORKSPACE}/${majorMc}") {
+                dir("${WORKSPACE}/versions/${majorMc}") {
                     sh "./gradlew publishMod -Prelease=true"
                 }
             }
@@ -42,7 +42,7 @@ pipeline {
     }
     post {
         always {
-            dir("${WORKSPACE}/${majorMc}") {
+            dir("${WORKSPACE}/versions/${majorMc}") {
                 sh "./gradlew --stop"
                 deleteDir()
             }

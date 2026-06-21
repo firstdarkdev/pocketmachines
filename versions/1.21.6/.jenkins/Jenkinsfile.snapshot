@@ -32,7 +32,7 @@ pipeline {
 
         stage("Build") {
             steps {
-                dir("${WORKSPACE}/${majorMc}") {
+                dir("${WORKSPACE}/versions/${majorMc}") {
                     sh "chmod +x ./gradlew"
                     sh "./gradlew build -PreleaseType=${reltype}"
                 }
@@ -42,7 +42,7 @@ pipeline {
 
     post {
         always {
-            dir("${WORKSPACE}/${majorMc}") {
+            dir("${WORKSPACE}/versions/${majorMc}") {
                 sh "./gradlew --stop"
                 archiveArtifacts artifacts: 'artifacts/*.jar'
 
