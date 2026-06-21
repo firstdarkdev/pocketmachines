@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.8"
-    id "xyz.wagyourtail.unimined" version "1.2.9" apply false
+    id "dev.firstdark.unimined" version "1.0.9+1.4.2-SNAPSHOT" apply false
     id "com.hypherionmc.modutils.orion" version "1.0.28"
     id 'com.matyrobbrt.mc.registrationutils' version "1.20.1-2.0.2"
     id "com.hypherionmc.modutils.modpublisher" version "2.1.+"
@@ -43,7 +43,7 @@ registrationUtils {
 group = project_group
 
 subprojects {
-    apply plugin: "xyz.wagyourtail.unimined"
+    apply plugin: "dev.firstdark.unimined"
     apply plugin: "java"
     apply plugin: 'maven-publish'
     apply plugin: 'com.hypherionmc.modutils.modpublisher'
