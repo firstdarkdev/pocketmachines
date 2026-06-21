@@ -1,13 +1,9 @@
 package com.hypherionmc.pocketmachines.common.inventory;
 
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
-import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.ContainerListener;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
+
+import static com.hypherionmc.pocketmachines.common.util.ItemStackUtil.getStackFromTemplate;
 
 public class PocketBrewingStandInventory extends SimpleContainer implements MenuProvider, ISaveableContainer {
 
@@ -161,7 +158,7 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
         }
 
         itemStack.shrink(1);
-        ItemStack lv3 = itemStack.getItem().getCraftingRemainder();
+        ItemStack lv3 = getStackFromTemplate(itemStack.getItem().getCraftingRemainder());
         if (!lv3.isEmpty()) {
             if (itemStack.isEmpty()) {
                 itemStack = lv3;
@@ -191,13 +188,13 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
 
     @Override
     public void setChanged() {
-        List<ContainerListener> changedListeners = ((SimpleContainerAccessor) this).getListeners();
-        if (changedListeners != null) {
-            for (ContainerListener iinventorychangedlistener : changedListeners) {
-                iinventorychangedlistener.containerChanged(this);
-            }
-            PersistedMachines.markDirty();
-        }
+//        List<ContainerListener> changedListeners = ((SimpleContainerAccessor) this).getListeners();
+//        if (changedListeners != null) {
+//            for (ContainerListener iinventorychangedlistener : changedListeners) {
+//                iinventorychangedlistener.containerChanged(this);
+//            }
+//            PersistedMachines.markDirty();
+//        }
         PersistedMachines.markDirty();
     }
 

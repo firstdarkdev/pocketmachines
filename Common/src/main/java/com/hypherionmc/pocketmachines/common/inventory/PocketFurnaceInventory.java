@@ -2,8 +2,6 @@ package com.hypherionmc.pocketmachines.common.inventory;
 
 import com.hypherionmc.pocketmachines.common.inventory.base.AbstractPocketFurnaceInventory;
 import com.hypherionmc.pocketmachines.common.menus.PocketFurnaceMenu;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;

@@ -2,18 +2,15 @@ package com.hypherionmc.pocketmachines.common.inventory.base;
 
 import com.hypherionmc.pocketmachines.common.inventory.ISaveableContainer;
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
-import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
 import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.ContainerListener;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,8 +28,9 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
+
+import static com.hypherionmc.pocketmachines.common.util.ItemStackUtil.getStackFromTemplate;
 
 public abstract class AbstractPocketFurnaceInventory extends SimpleContainer implements MenuProvider, ISaveableContainer {
 
@@ -161,30 +159,30 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
             }
 
             int i = this.getMaxStackSize();
-            if (!this.isLit() && canBurn(level.registryAccess(), lv4, lv3, this.items, i)) {
+            if (!this.isLit() && canBurn(lv4, lv3, this.items, i)) {
                 this.litTime = this.getBurnDuration(level.fuelValues(), itemStack);
                 this.litDuration = this.litTime;
                 if (this.isLit()) {
                     isDirty = true;
-                    ItemStack remainder = PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack);
+                    ItemStack remainder = getStackFromTemplate(PocketMachinesHelper.INSTANCE.getCraftingRemainder(itemStack));
                     if (!remainder.isEmpty()) {
                         this.items.set(1, remainder);
                     } else if (hasFuel) {
                         Item lv5 = itemStack.getItem();
                         itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
-                            this.items.set(1, lv5.getCraftingRemainder());
+                            this.items.set(1, getStackFromTemplate(lv5.getCraftingRemainder()));
                         }
                     }
                 }
             }
 
-            if (this.isLit() && canBurn(level.registryAccess(), lv4, lv3, this.items, i)) {
+            if (this.isLit() && canBurn(lv4, lv3, this.items, i)) {
                 ++this.cookingProgress;
                 if (this.cookingProgress == this.cookingTotalTime) {
                     this.cookingProgress = 0;
                     this.cookingTotalTime = getTotalCookTime(level, this.getItem(0));
-                    if (burn(level.registryAccess(), lv4, lv3, this.items, i)) {
+                    if (burn(lv4, lv3, this.items, i)) {
                         this.setRecipeUsed(lv4);
                     }
 
@@ -204,9 +202,9 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         }
     }
 
-    private static boolean canBurn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipeHolder, SingleRecipeInput input, NonNullList<ItemStack> nonNullList, int i) {
+    private static boolean canBurn(@Nullable RecipeHolder<?> recipeHolder, SingleRecipeInput input, NonNullList<ItemStack> nonNullList, int i) {
         if (!nonNullList.get(0).isEmpty() && recipeHolder != null) {
-            ItemStack itemStack = ((AbstractCookingRecipe) recipeHolder.value()).assemble(input, registryAccess);
+            ItemStack itemStack = ((AbstractCookingRecipe) recipeHolder.value()).assemble(input);
             if (itemStack.isEmpty()) {
                 return false;
             } else {
@@ -224,10 +222,10 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
         }
     }
 
-    private static boolean burn(RegistryAccess registryAccess, @Nullable RecipeHolder<?> recipeHolder, SingleRecipeInput input, NonNullList<ItemStack> nonNullList, int i) {
-        if (recipeHolder != null && canBurn(registryAccess, recipeHolder, input, nonNullList, i)) {
+    private static boolean burn(@Nullable RecipeHolder<?> recipeHolder, SingleRecipeInput input, NonNullList<ItemStack> nonNullList, int i) {
+        if (recipeHolder != null && canBurn(recipeHolder, input, nonNullList, i)) {
             ItemStack itemStack = nonNullList.get(0);
-            ItemStack itemStack2 = ((AbstractCookingRecipe) recipeHolder.value()).assemble(input, registryAccess);
+            ItemStack itemStack2 = ((AbstractCookingRecipe) recipeHolder.value()).assemble(input);
             ItemStack itemStack3 = nonNullList.get(2);
             if (itemStack3.isEmpty()) {
                 nonNullList.set(2, itemStack2.copy());
@@ -266,13 +264,13 @@ public abstract class AbstractPocketFurnaceInventory extends SimpleContainer imp
 
     @Override
     public void setChanged() {
-        List<ContainerListener> changedListeners = ((SimpleContainerAccessor) this).getListeners();
-        if (changedListeners != null) {
-            for (ContainerListener iinventorychangedlistener : changedListeners) {
-                iinventorychangedlistener.containerChanged(this);
-            }
-            PersistedMachines.markDirty();
-        }
+//        List<ContainerListener> changedListeners = ((SimpleContainerAccessor) this).getListeners();
+//        if (changedListeners != null) {
+//            for (ContainerListener iinventorychangedlistener : changedListeners) {
+//                iinventorychangedlistener.containerChanged(this);
+//            }
+//            PersistedMachines.markDirty();
+//        }
         PersistedMachines.markDirty();
     }
 

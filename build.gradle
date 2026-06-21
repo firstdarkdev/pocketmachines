@@ -2,9 +2,9 @@ plugins {
     id 'java'
     id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.8"
     id "dev.firstdark.unimined" version "1.0.9+1.4.2-SNAPSHOT" apply false
-    id "com.hypherionmc.modutils.orion" version "1.0.28"
-    id 'com.matyrobbrt.mc.registrationutils' version "1.21.11-0.1.0"
-    id "com.hypherionmc.modutils.modpublisher" version "2.1.+"
+    id "com.hypherionmc.modutils.orion" version "2.0.+"
+    id 'com.matyrobbrt.mc.registrationutils' version "26.1-0.1.0"
+    id "com.hypherionmc.modutils.modpublisher" version "2.2.+"
 }
 
 var relType = project.properties["releaseType"] ?: "${release_type}"
@@ -42,6 +42,8 @@ registrationUtils {
 
 group = project_group
 
+jar.enabled = false
+
 subprojects {
     apply plugin: "dev.firstdark.unimined"
     apply plugin: "java"
@@ -49,8 +51,10 @@ subprojects {
     apply plugin: 'com.hypherionmc.modutils.modpublisher'
 
     group = rootProject.group
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    java {
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
+    }
 
     // Add your maven repositories here
     repositories {
@@ -64,7 +68,7 @@ subprojects {
     jar {
         manifest {
             attributes([
-                    'Specification-Title'     : project.archivesBaseName,
+                    'Specification-Title'     : 'PocketMachines',
                     'Specification-Vendor'    : mod_author,
                     'Specification-Version'   : project.version,
                     'Implementation-Title'    : project.name,
@@ -86,16 +90,11 @@ subprojects {
 
     unimined.minecraft(sourceSets.main, true) {
         version minecraft_version
-
-        mappings {
-            mojmap()
-            devNamespace "mojmap"
-        }
     }
 
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = 'UTF-8'
-        it.options.release = 21
+        it.options.release = 25
     }
 
     tasks.withType(GenerateModuleMetadata).configureEach {

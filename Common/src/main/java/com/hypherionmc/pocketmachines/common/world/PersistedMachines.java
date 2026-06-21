@@ -9,10 +9,11 @@ import lombok.Getter;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 import net.minecraft.world.level.storage.ValueInput;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
 
 public final class PersistedMachines extends SavedData {
 
-    private static final String NAME = "PocketMachinesData";
+    private static final Identifier NAME = Identifier.tryParse("pocketmachines:pocket_machines_data");
     private static final List<SaveHolder<?>> registeredItems = new ArrayList<>();
     private static PersistedMachines INSTANCE;
 
@@ -78,9 +79,9 @@ public final class PersistedMachines extends SavedData {
     public static void setInstance(ServerLevel level) {
         if (level == null) return;
 
-        DimensionDataStorage dimensionDataStorage = level.getDataStorage();
-        INSTANCE = dimensionDataStorage.computeIfAbsent(TYPE);
         PersistedMachines.level = level;
+        SavedDataStorage dimensionDataStorage = level.getDataStorage();
+        INSTANCE = dimensionDataStorage.computeIfAbsent(TYPE);
     }
 
     public static boolean hasLevel() {

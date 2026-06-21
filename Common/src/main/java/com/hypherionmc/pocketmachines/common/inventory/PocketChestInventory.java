@@ -2,13 +2,9 @@ package com.hypherionmc.pocketmachines.common.inventory;
 
 import com.hypherionmc.pocketmachines.common.setup.ModContainers;
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
-import com.hypherionmc.pocketmachines.mixin.accessor.SimpleContainerAccessor;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.ContainerListener;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,8 +16,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class PocketChestInventory extends SimpleContainer implements MenuProvider, ISaveableContainer {
 
@@ -62,13 +56,13 @@ public class PocketChestInventory extends SimpleContainer implements MenuProvide
 
     @Override
     public void setChanged() {
-        List<ContainerListener> changedListeners = ((SimpleContainerAccessor) this).getListeners();
-        if (changedListeners != null) {
-            for (ContainerListener iinventorychangedlistener : changedListeners) {
-                iinventorychangedlistener.containerChanged(this);
-            }
-            PersistedMachines.markDirty();
-        }
+//        List<ContainerListener> changedListeners = ((SimpleContainerAccessor) this).getListeners();
+//        if (changedListeners != null) {
+//            for (ContainerListener iinventorychangedlistener : changedListeners) {
+//                iinventorychangedlistener.containerChanged(this);
+//            }
+//            PersistedMachines.markDirty();
+//        }
         PersistedMachines.markDirty();
     }
 

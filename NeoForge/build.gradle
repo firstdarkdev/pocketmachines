@@ -1,5 +1,7 @@
 // Adjust the output jar name here
-archivesBaseName = "${mod_name.replace(" ", "")}-NeoForge-${minecraft_version}"
+base {
+    archivesName = "${mod_name.replace(" ", "")}-NeoForge-${minecraft_version}"
+}
 
 dependencies {
     // Add your dependencies here
@@ -51,10 +53,10 @@ publisher {
     setModrinthID('pocketmachines')
     setNightbloomID("pocketmachines")
     setVersionType("release")
-    setChangelog("https://raw.githubusercontent.com/hypherionmc/changelogs/refs/heads/main/pocketmachines.md")
+    setChangelog(rootProject.file("changelog.md"))
     setProjectVersion("${minecraft_version}-${project.version}")
-    setDisplayName("[NeoForge 1.21.11] Simple Pocket Machines - ${project.version}")
-    setGameVersions("1.21.11")
+    setDisplayName("[NeoForge 26.1.2] Simple Pocket Machines - ${project.version}")
+    setGameVersions("26.1.2")
     setLoaders("neoforge")
     setArtifact(remapJar)
     setCurseEnvironment("both")
