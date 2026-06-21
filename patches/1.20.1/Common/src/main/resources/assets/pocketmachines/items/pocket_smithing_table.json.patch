@@ -1,9 +1,0 @@
---- a/Common/src/main/resources/assets/pocketmachines/items/pocket_smithing_table.json
-+++ /dev/null
-@@ -1,6 +1,0 @@
--{
--  "model": {
--    "type": "minecraft:model",
--    "model": "pocketmachines:item/pocket_smithing_table"
--  }
--}
