@@ -48,9 +48,9 @@ public final class PersistedMachines extends SavedData {
     public static void setInstance(ServerLevel level) {
         if (level == null) return;
 
+        PersistedMachines.level = level;
         DimensionDataStorage dimensionDataStorage = level.getDataStorage();
         INSTANCE = dimensionDataStorage.computeIfAbsent(PersistedMachines::load, PersistedMachines::new, NAME);
-        PersistedMachines.level = level;
     }
 
     public static boolean hasLevel() {

@@ -51,7 +51,7 @@ publisher {
     setModrinthID('pocketmachines')
     setNightbloomID("pocketmachines")
     setVersionType("release")
-    setChangelog("https://raw.githubusercontent.com/hypherionmc/changelogs/refs/heads/main/pocketmachines.md")
+    setChangelog(rootProject.file("changelog.md"))
     setProjectVersion("${minecraft_version}-${project.version}")
     setDisplayName("[Forge/NeoForge 1.20.1] Simple Pocket Machines - ${project.version}")
     setGameVersions("1.20.1")
