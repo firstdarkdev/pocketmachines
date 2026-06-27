@@ -1,9 +1,9 @@
 def projectName = "Simple Pocket Machines";
 def projectIcon = "https://cdn.nightbloom.cc/data/pocketmachines/images/SimplePocketMachines.png";
 def JDK = "25";
-def majorMc = "26.1.2";
+def majorMc = "26.2";
 def modLoaders = "neoforge|fabric|quilt";
-def supportedMc = "26.1.2"
+def supportedMc = "26.2"
 def reltype = "snapshot";
 
 pipeline {

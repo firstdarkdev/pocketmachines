@@ -15,12 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class AbstractPocketFurnaceMenu extends AbstractFurnaceMenu {
 
-    public AbstractPocketFurnaceMenu(MenuType<?> menuType, RecipeType<? extends AbstractCookingRecipe> recipeType, ResourceKey<RecipePropertySet> recipeProperties, RecipeBookType recipeBookType, int containerId, Inventory playerInventory) {
-        super(menuType, recipeType, recipeProperties, recipeBookType, containerId, playerInventory);
+    public AbstractPocketFurnaceMenu(MenuType<?> menuType, ResourceKey<RecipePropertySet> recipeProperties, RecipeBookType recipeBookType, int containerId, Inventory playerInventory) {
+        super(menuType, recipeProperties, recipeBookType, containerId, playerInventory);
     }
 
-    public AbstractPocketFurnaceMenu(MenuType<?> menuType, RecipeType<? extends AbstractCookingRecipe> recipeType, ResourceKey<RecipePropertySet> recipeProperties, RecipeBookType recipeBookType, int containerId, Inventory playerInventory, Container container, ContainerData containerData) {
-        super(menuType, recipeType, recipeProperties, recipeBookType, containerId, playerInventory, container, containerData);
+    public AbstractPocketFurnaceMenu(MenuType<?> menuType, ResourceKey<RecipePropertySet> recipeProperties, RecipeBookType recipeBookType, int containerId, Inventory playerInventory, Container container, ContainerData containerData) {
+        super(menuType, recipeProperties, recipeBookType, containerId, playerInventory, container, containerData);
     }
 
     @Override

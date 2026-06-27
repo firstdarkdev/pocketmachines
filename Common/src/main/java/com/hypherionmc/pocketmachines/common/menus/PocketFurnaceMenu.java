@@ -12,11 +12,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 public class PocketFurnaceMenu extends AbstractPocketFurnaceMenu {
 
     public PocketFurnaceMenu(int containerId, Inventory playerInventory) {
-        super(ModContainers.FURNACE.get(), RecipeType.SMELTING, RecipePropertySet.FURNACE_INPUT, RecipeBookType.FURNACE, containerId, playerInventory);
+        super(ModContainers.FURNACE.get(), RecipePropertySet.FURNACE_INPUT, RecipeBookType.FURNACE, containerId, playerInventory);
     }
 
     public PocketFurnaceMenu(int containerId, Inventory playerInventory, Container container, ContainerData containerData) {
-        super(ModContainers.FURNACE.get(), RecipeType.SMELTING, RecipePropertySet.FURNACE_INPUT, RecipeBookType.FURNACE, containerId, playerInventory, container, containerData);
+        super(ModContainers.FURNACE.get(), RecipePropertySet.FURNACE_INPUT, RecipeBookType.FURNACE, containerId, playerInventory, container, containerData);
     }
 
 }
