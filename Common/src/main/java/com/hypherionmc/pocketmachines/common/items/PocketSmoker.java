@@ -27,6 +27,6 @@ public class PocketSmoker extends BaseTickablePocketItem<PocketSmokerInventory> 
 
     @Override
     public void tickItem(PocketSmokerInventory container, @NotNull ItemStack stack, ServerLevel level, @NotNull Entity entity, EquipmentSlot slot) {
-        container.tick(level);
+        container.tick(level, entity.getOnPos());
     }
 }

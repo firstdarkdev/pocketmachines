@@ -27,6 +27,6 @@ public class PocketBrewingStand extends BaseTickablePocketItem<PocketBrewingStan
 
     @Override
     public void tickItem(PocketBrewingStandInventory container, @NotNull ItemStack stack, ServerLevel level, @NotNull Entity entity, EquipmentSlot slot) {
-        container.tick(level);
+        container.tick(level, entity.getOnPos());
     }
 }

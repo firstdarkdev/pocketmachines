@@ -4,8 +4,8 @@
   "package": "com.hypherionmc.pocketmachines.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "FurnaceResultSlotMixin",
     "SlotMixin",
-    "accessor.SimpleContainerAccessor"
   ],
   "client": [
     "accessor.MenuScreensAccess"

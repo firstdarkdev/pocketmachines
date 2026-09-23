@@ -31,7 +31,7 @@ public class PocketBlastFurnace extends BaseTickablePocketItem<PocketBlastFurnac
 
     @Override
     public void tickItem(PocketBlastFurnaceInventory container, @NotNull ItemStack stack, ServerLevel level, @NotNull Entity entity, EquipmentSlot slot) {
-        container.tick(level);
+        container.tick(level, entity.getOnPos());
 
         CustomModelData data = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY);
         String oldLitState = data.getString(0) == null ? "unlit" : data.getString(0);

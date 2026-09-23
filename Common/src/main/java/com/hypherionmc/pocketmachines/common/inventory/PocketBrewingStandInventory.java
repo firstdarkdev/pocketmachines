@@ -1,9 +1,14 @@
 package com.hypherionmc.pocketmachines.common.inventory;
 
 import com.hypherionmc.pocketmachines.common.world.PersistedMachines;
+import com.hypherionmc.pocketmachines.platform.PocketMachinesHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,25 +18,30 @@ import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.component.BrewingFuel;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BrewingStandBlock;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-
-import static com.hypherionmc.pocketmachines.common.util.ItemStackUtil.getStackFromTemplate;
+import java.util.Optional;
 
 public class PocketBrewingStandInventory extends SimpleContainer implements MenuProvider, ISaveableContainer {
 
     private static final Component NAME = Component.translatable("item.pocketmachines.pocket_brewing_stand");
-    private final NonNullList<ItemStack> items = NonNullList.withSize(5, ItemStack.EMPTY);
-    private boolean[] lastPotionCount;
     private Item ingredient;
-    int brewTime, fuel;
+    int brewTime, totalBrewTime, fuel, totalFuel;
+    float speedMultiplier = 1.0f;
+    private final RecipeManager.CachedCheck<BrewingInput, BrewingRecipe> quickCheck = RecipeManager.createCheck(RecipeType.BREWING);
 
     protected final ContainerData dataAccess = new ContainerData() {
         @Override
@@ -39,6 +49,8 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
             return switch (i) {
                 case 0 -> brewTime;
                 case 1 -> fuel;
+                case 2 -> totalBrewTime;
+                case 3 -> totalFuel;
                 default -> 0;
             };
         }
@@ -46,17 +58,16 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
         @Override
         public void set(int i, int j) {
             switch (i) {
-                case 0:
-                    brewTime = j;
-                    break;
-                case 1:
-                    fuel = j;
+                case 0 -> brewTime = j;
+                case 1 -> fuel = j;
+                case 2 -> totalBrewTime = j;
+                case 3 -> totalFuel = j;
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 4;
         }
     };
 
@@ -75,182 +86,174 @@ public class PocketBrewingStandInventory extends SimpleContainer implements Menu
         return NAME;
     }
 
-    @Override
-    public int getContainerSize() {
-        return this.items.size();
+    protected int getUses(ServerLevel level, BrewingFuel brewingFuel, BlockPos pos) {
+        return brewingFuel.uses().get(getLootContext(level, pos), 0);
     }
 
-    @Override
-    public @NotNull NonNullList<ItemStack> getItems() {
-        return this.items;
+    protected float getSpeedMultiplier(ServerLevel level, BrewingFuel brewingFuel, BlockPos pos) {
+        return brewingFuel.speedMultiplier().get(getLootContext(level, pos), 1.0f);
     }
 
-    public void tick(Level level) {
-        ItemStack itemStack = this.items.get(4);
-        if (this.fuel <= 0 && itemStack.is(Items.BLAZE_POWDER)) {
-            this.fuel = 20;
-            itemStack.shrink(1);
+    public void tick(ServerLevel level, BlockPos pos) {
+        NonNullList<ItemStack> items = getItems();
+        ItemStack fuel = items.get(4);
+        BrewingFuel brewingFuel = fuel.get(DataComponents.BREWING_FUEL);
+
+        if (this.fuel <= 0 && brewingFuel != null) {
+            this.fuel = getUses(level, brewingFuel, pos);
+            this.totalFuel = this.fuel;
+            this.speedMultiplier = getSpeedMultiplier(level, brewingFuel, pos);
+            ItemStackTemplate fuelRemainder = fuel.getItem().getCraftingRemainder();
+            ItemStack newFuel = fuel;
+            fuel.shrink(1);
+
+            if (fuelRemainder != null) {
+                if (fuel.isEmpty()) {
+                    newFuel = fuelRemainder.create();
+                } else {
+                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), fuelRemainder.create());
+                }
+            }
+
+            items.set(4, newFuel);
             setChanged();
         }
 
-        boolean bl = isBrewable(level.potionBrewing(), this.items);
-        boolean bl2 = this.brewTime > 0;
-        ItemStack itemStack2 = this.items.get(3);
-        if (bl2) {
-            this.brewTime--;
-            boolean bl3 = this.brewTime == 0;
-            if (bl3 && bl) {
-                doBrew(level, this.items);
-            } else if (!bl || !itemStack2.is(this.ingredient)) {
+        boolean brewable = isBrewable(level);
+        boolean isBrewing = this.brewTime > 0;
+        ItemStack ingredient = items.get(3);
+
+        if (isBrewing) {
+            --this.brewTime;
+            boolean isDoneBrewing = this.brewTime == 0;
+            if (isDoneBrewing && brewable) {
+                doBrew(level, pos);
+            } else if (!brewable || !ingredient.is(this.ingredient)) {
                 this.brewTime = 0;
             }
 
             setChanged();
-        } else if (bl && this.fuel > 0) {
-            this.fuel--;
-            this.brewTime = 400;
-            this.ingredient = itemStack2.getItem();
+        } else if (brewable && this.fuel > 0) {
+            float speedMultiplier = this.speedMultiplier > 0.0F ? this.speedMultiplier : 1.0F;
+            --this.fuel;
+            this.brewTime = (int)Math.ceil((double) 400.0F / speedMultiplier);
+            this.totalBrewTime = this.brewTime;
+            this.ingredient = ingredient.getItem();
             setChanged();
         }
-
-        boolean[] bls = this.getPotionBits();
-        if (!Arrays.equals(bls, this.lastPotionCount)) {
-            this.lastPotionCount = bls;
-        }
     }
 
-    private boolean[] getPotionBits() {
-        boolean[] bls = new boolean[3];
+    private boolean isBrewable(ServerLevel level) {
+        NonNullList<ItemStack> items = getItems();
+        ItemStack ingredient = items.get(3);
 
-        for (int i = 0; i < 3; i++) {
-            if (!this.items.get(i).isEmpty()) {
-                bls[i] = true;
-            }
-        }
+        if (ingredient.isEmpty()) return false;
 
-        return bls;
-    }
+        RecipeManager recipeManager = level.recipeAccess();
+        if (!recipeManager.propertySet(RecipePropertySet.BREWING_REAGENTS).test(ingredient)) return false;
 
-    private static boolean isBrewable(PotionBrewing potionBrewing, NonNullList<ItemStack> nonNullList) {
-        ItemStack itemStack = nonNullList.get(3);
-        if (itemStack.isEmpty()) {
-            return false;
-        } else if (!potionBrewing.isIngredient(itemStack)) {
-            return false;
-        } else {
-            for (int i = 0; i < 3; i++) {
-                ItemStack itemStack2 = nonNullList.get(i);
-                if (!itemStack2.isEmpty() && potionBrewing.hasMix(itemStack2, itemStack)) {
+        for (int dest = 0; dest < 3; ++dest) {
+            ItemStack stack = items.get(dest);
+            if (!stack.isEmpty()) {
+                Optional<RecipeHolder<BrewingRecipe>> recipe = quickCheck.getRecipeFor(new BrewingInput(stack, ingredient), level);
+                if (recipe.isPresent()) {
                     return true;
                 }
             }
-
-            return false;
         }
+
+        return false;
     }
 
-    private static void doBrew(Level level, NonNullList<ItemStack> nonNullList) {
-        ItemStack itemStack = nonNullList.get(3);
-        PotionBrewing potionBrewing = level.potionBrewing();
+    private void doBrew(final ServerLevel level, final BlockPos pos) {
+        NonNullList<ItemStack> items = getItems();
+        ItemStack ingredient = items.get(3);
 
-        for (int i = 0; i < 3; i++) {
-            nonNullList.set(i, potionBrewing.mix(itemStack, nonNullList.get(i)));
+        for(int dest = 0; dest < 3; ++dest) {
+            ItemStack container = items.get(dest);
+            BrewingInput input = new BrewingInput(container, ingredient);
+            Optional<RecipeHolder<BrewingRecipe>> recipe = quickCheck.getRecipeFor(input, level);
+            items.set(dest, recipe.isPresent() ? ((recipe.get()).value()).assemble(input) : container);
         }
 
-        itemStack.shrink(1);
-        ItemStack lv3 = getStackFromTemplate(itemStack.getItem().getCraftingRemainder());
-        if (!lv3.isEmpty()) {
-            if (itemStack.isEmpty()) {
-                itemStack = lv3;
+        ItemStackTemplate remainder = PocketMachinesHelper.INSTANCE.getCraftingRemainder(ingredient);
+        ingredient.shrink(1);
+        if (remainder != null) {
+            if (ingredient.isEmpty()) {
+                ingredient = remainder.create();
+            } else {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), remainder.create());
             }
         }
 
-        nonNullList.set(3, itemStack);
+        items.set(3, ingredient);
+        level.levelEvent(1035, pos, 0);
     }
 
-
     public void load(ValueInput compoundTag) {
-        this.items.clear();
-        ContainerHelper.loadAllItems(compoundTag, this.items);
+        this.clearContent();
+        ContainerHelper.loadAllItems(compoundTag, this.getItems());
         this.brewTime = compoundTag.getShortOr("BrewTime", (short) 0);
+        this.totalBrewTime = compoundTag.getShortOr("TotalBrewTime", (short) 0);
         if (this.brewTime > 0) {
-            this.ingredient = this.items.get(3).getItem();
+            this.ingredient = this.getItems().get(3).getItem();
         }
 
         this.fuel = compoundTag.getByteOr("Fuel", (byte) 0);
+        this.totalFuel = compoundTag.getByteOr("TotalFuel", (byte) 0);
+        this.speedMultiplier = compoundTag.getFloatOr("speed_multiplier", 1.0F);
     }
 
+    @Override
     public void save(@NotNull ValueOutput compoundTag) {
         compoundTag.putShort("BrewTime", (short)this.brewTime);
-        ContainerHelper.saveAllItems(compoundTag, this.items);
+        compoundTag.putShort("TotalBrewTime", (short)this.totalBrewTime);
+        ContainerHelper.saveAllItems(compoundTag, this.getItems());
         compoundTag.putByte("Fuel", (byte)this.fuel);
+        compoundTag.putShort("TotalFuel", (short)this.totalFuel);
+        compoundTag.putFloat("speed_multiplier", this.speedMultiplier);
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack itemStack) {
+        if (slot == 4) {
+            return itemStack.has(DataComponents.BREWING_FUEL);
+        } else if (PersistedMachines.getLevel() == null) {
+            return false;
+        } else {
+            RecipeAccess recipeAccess = PersistedMachines.getLevel().recipeAccess();
+            return slot == 3 ? recipeAccess.propertySet(RecipePropertySet.BREWING_REAGENTS).test(itemStack) : PotionIngredient.isPotionInput(itemStack, recipeAccess) && this.getItem(slot).isEmpty();
+        }
     }
 
     @Override
     public void setChanged() {
-//        List<ContainerListener> changedListeners = ((SimpleContainerAccessor) this).getListeners();
-//        if (changedListeners != null) {
-//            for (ContainerListener iinventorychangedlistener : changedListeners) {
-//                iinventorychangedlistener.containerChanged(this);
-//            }
-//            PersistedMachines.markDirty();
-//        }
+        super.setChanged();
         PersistedMachines.markDirty();
     }
 
     @Override
-    public @NotNull ItemStack getItem(int i) {
-        return i >= 0 && i < this.items.size() ? this.items.get(i) : ItemStack.EMPTY;
-    }
-
-    @Override
-    public @NotNull ItemStack removeItem(int index, int count) {
-        return ContainerHelper.removeItem(this.items, index, count);
-    }
-
-    @Override
-    public @NotNull ItemStack removeItemNoUpdate(int i) {
-        return ContainerHelper.takeItem(this.items, i);
-    }
-
-    @Override
-    public boolean stillValid(@NotNull Player arg) {
+    public boolean stillValid(Player player) {
         return true;
-    }
-
-    @Override
-    public boolean canPlaceItem(int i, @NotNull ItemStack itemStack) {
-        if (i == 3) {
-            PotionBrewing potionBrewing = PersistedMachines.hasLevel() ? PersistedMachines.getLevel().potionBrewing() : PotionBrewing.EMPTY;
-            return potionBrewing.isIngredient(itemStack);
-        } else {
-            return i == 4
-                    ? itemStack.is(Items.BLAZE_POWDER)
-                    : (itemStack.is(Items.POTION) || itemStack.is(Items.SPLASH_POTION) || itemStack.is(Items.LINGERING_POTION) || itemStack.is(Items.GLASS_BOTTLE))
-                    && this.getItem(i).isEmpty();
-        }
-    }
-
-    @Override
-    public void clearContent() {
-        this.items.clear();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return items.stream().allMatch(ItemStack::isEmpty);
-    }
-
-    @Override
-    public void setItem(int pIndex, @NotNull ItemStack pStack) {
-        if (pIndex >= 0 && pIndex < this.items.size()) {
-            this.items.set(pIndex, pStack);
-        }
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, @NotNull Inventory inventory, @NotNull Player player) {
         return new BrewingStandMenu(containerId, inventory, this, this.dataAccess);
+    }
+
+    protected LootContext getLootContext(ServerLevel level, BlockPos pos) {
+        return new LootContext.Builder(
+                new LootParams.Builder(level)
+                        .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
+                        .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
+                        .withParameter(LootContextParams.BLOCK_STATE, Blocks.BREWING_STAND.defaultBlockState()
+                                .setValue(BrewingStandBlock.HAS_BOTTLE[0], !getItems().get(0).isEmpty())
+                                .setValue(BrewingStandBlock.HAS_BOTTLE[1], !getItems().get(1).isEmpty())
+                                .setValue(BrewingStandBlock.HAS_BOTTLE[2], !getItems().get(2).isEmpty())
+                        )
+                        .create(LootContextParamSets.BLOCK)
+        ).create(Optional.empty());
     }
 }
